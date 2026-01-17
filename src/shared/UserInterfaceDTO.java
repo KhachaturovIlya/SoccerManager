@@ -1,5 +1,7 @@
 package shared;
 
-public record UserInterfaceDTO (
+import java.util.List;
 
+public record UserInterfaceDTO (
+    List<VisualWidgetDTO> widgetDTOS
 ) {}
