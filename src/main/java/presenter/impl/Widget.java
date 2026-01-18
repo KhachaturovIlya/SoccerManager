@@ -16,7 +16,7 @@ public class Widget {
     final private Shape shape;
     final private Color shapeColor;
 
-    final private String text;
+    private String text;
     final private Color textColor;
 
     final private Vector2 normalizedPosition;
@@ -25,7 +25,7 @@ public class Widget {
     // Methods:
 
     private Widget(int id, Shape shape, Color shapeColor, String text,
-        Color textColor, Vector2 normalizedPosition) {
+        Color textColor, Vector2 normalizedPosition, List<Runnable> clickActions) {
         this.id = id;
         this.active = false;
         this.shape = shape;
@@ -33,12 +33,7 @@ public class Widget {
         this.text = text;
         this.textColor = textColor;
         this.normalizedPosition = normalizedPosition;
-    }
-
-    public void addOnClick(Runnable action) {
-        if (action != null) {
-            this.clickActions.add(action);
-        }
+        this.clickActions.addAll(clickActions);
     }
 
     public void executeClick() {
@@ -57,15 +52,21 @@ public class Widget {
         this.text = other.text;
         this.textColor = other.textColor;
         this.normalizedPosition = other.normalizedPosition;
+        this.clickActions.addAll(other.clickActions);
     }
 
-    public static Widget createButton(int id, Shape shape, Color color, Vector2 position) {
-        return new Widget(id, shape, color, "", color, position);
+    public static Widget createButton(int id, Shape shape, Color color, Vector2 position,
+        List<Runnable> clickActions) {
+        return new Widget(id, shape, color, "", color, position, clickActions);
     }
 
     public static Widget createLabel(Shape shape, Color shapeColor,
         String text, Color textColor, Vector2 position) {
-        return new Widget(-1, shape, shapeColor, text, textColor, position);
+        return new Widget(-1, shape, shapeColor, text, textColor, position, null);
+    }
+
+    public void setText(String text) {
+        this.text = text;
     }
 
     public void sleep() {
@@ -80,6 +81,10 @@ public class Widget {
 
     public boolean isActive() {
         return active;
+    }
+
+    public boolean isSleeping() {
+        return !active;
     }
 
     public int getId() {

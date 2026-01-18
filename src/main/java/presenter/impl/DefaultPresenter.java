@@ -4,6 +4,7 @@ import presenter.IPresenter;
 import shared.ActionWidgetDTO;
 import shared.VisualWidgetDTO;
 import view.IView;
+import presenter.impl.Widget;
 
 import java.util.ArrayList;
 import java.util.List;
