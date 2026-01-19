@@ -1,9 +1,8 @@
 package model.entityInterfaces;
 
 import model.components.*;
-import model.subclasses.FootballCharacteristicsEnum;
+import model.subclasses.FootballCharacteristics;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 public interface IFootballerProfile extends IHasName, IHasAge, IClubMember, IHasNationality {
@@ -18,7 +17,7 @@ public interface IFootballerProfile extends IHasName, IHasAge, IClubMember, IHas
     void increaseTransferCost(int costAdd);
     void decreaseTransferCost(int costLoss);
 
-    short charasteristic(FootballCharacteristicsEnum characteristic) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException;
-    void increaseCharacteristic(FootballCharacteristicsEnum characteristic, short add) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException;
-    void decreaseCharacteristic(FootballCharacteristicsEnum characteristic, short loss) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException;
+    short characteristic(FootballCharacteristics characteristic);
+    void increaseCharacteristci(FootballCharacteristics characteristic, short add);
+    void decreaseCharacteristci(FootballCharacteristics characteristic, short loss);
 }

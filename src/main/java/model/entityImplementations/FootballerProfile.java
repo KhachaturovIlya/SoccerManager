@@ -2,14 +2,12 @@ package model.entityImplementations;
 
 import model.components.Roles;
 import model.entityInterfaces.IFootballerProfile;
-import model.subclasses.FootballCharacteristicsEnum;
-import model.subclasses.FootballerCharacteristics;
+import model.subclasses.FootballCharacteristics;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.List;
 
 public class FootballerProfile implements IFootballerProfile {
+    public static final int CHARACTERISTICS_CNT = 24;
     private final String _name;
     private final String _nationality;
     private String _club;
@@ -17,19 +15,16 @@ public class FootballerProfile implements IFootballerProfile {
     private short _number;
     private short _age;
     private int _transfer_cost;
-    private FootballerCharacteristics _characteristics;
+    private short[] _characteristics;
 
-
-    public FootballerProfile(String name, String nationality, String club, List<Roles> prefered_roles, short number,
-    FootballerCharacteristics characteristics) {
+    public FootballerProfile(String name, String nationality, String club, List<Roles> prefered_roles, short number) {
         _name = name;
         _nationality = nationality;
         _club = club;
         _prefered_roles = prefered_roles;
         _number = number;
-        _characteristics = characteristics;
+        _characteristics = new short[CHARACTERISTICS_CNT];
     }
-
 
     @Override
     public short number() {
@@ -72,26 +67,28 @@ public class FootballerProfile implements IFootballerProfile {
     }
 
     @Override
-    public short charasteristic(FootballCharacteristicsEnum characteristic) throws NoSuchMethodException,
-    InvocationTargetException, IllegalAccessException {
-        Method getter = FootballerCharacteristics.class.getMethod(characteristic.name());
-        return (short) getter.invoke(_characteristics);
+    public short characteristic(FootballCharacteristics characteristic) {
+        return _characteristics[characteristic.array_pos];
     }
 
     @Override
-    public void increaseCharacteristic(FootballCharacteristicsEnum characteristic, short add)
-    throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        String increaserName = "increase" + characteristic.name();
-        Method increaser = FootballerCharacteristics.class.getMethod(increaserName);
-        increaser.invoke(_characteristics, add);
+    public void increaseCharacteristci(FootballCharacteristics characteristic, short add) {
+        _characteristics[characteristic.array_pos] += add;
     }
 
     @Override
-    public void decreaseCharacteristic(FootballCharacteristicsEnum characteristic, short loss)
-    throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        String decreaserName = "decrease" + characteristic.name();
-        Method decreaser = FootballerCharacteristics.class.getMethod(decreaserName);
-        decreaser.invoke(_characteristics, loss);
+    public void decreaseCharacteristci(FootballCharacteristics characteristic, short loss) {
+        _characteristics[characteristic.array_pos] -= loss;
+    }
+
+    @Override
+    public String club() {
+        return _club;
+    }
+
+    @Override
+    public void setClub(String club) {
+        _club = club;
     }
 
     @Override
@@ -112,15 +109,5 @@ public class FootballerProfile implements IFootballerProfile {
     @Override
     public String nationality() {
         return _nationality;
-    }
-
-    @Override
-    public String club() {
-        return _club;
-    }
-
-    @Override
-    public void setClub(String club) {
-        _club = club;
     }
 }

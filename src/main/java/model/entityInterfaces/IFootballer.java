@@ -1,9 +1,8 @@
 package model.entityInterfaces;
 
 import model.components.*;
-import model.subclasses.FootballCharacteristicsEnum;
+import model.subclasses.FootballCharacteristics;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 public interface IFootballer extends IMovable, IHasName, IHasSize {
@@ -16,5 +15,5 @@ public interface IFootballer extends IMovable, IHasName, IHasSize {
 
     short number();
 
-    short charasteristic(FootballCharacteristicsEnum characteristic) throws InvocationTargetException, NoSuchMethodException, IllegalAccessException;
+    short charasteristic(FootballCharacteristics characteristic);
 }
