@@ -1,8 +1,9 @@
-package model.entityImplementations;
+package model.entityImpls;
 
 import model.subclasses.BaseFootballerCharacteristics;
 import model.entityInterfaces.IPlayingFootballer;
 import model.subclasses.FootballerCharacteristicsEnum;
+import model.subclasses.Role;
 import shared.Vector3;
 
 public class PlayingFootballer implements IPlayingFootballer {
@@ -13,11 +14,11 @@ public class PlayingFootballer implements IPlayingFootballer {
     private double _stamina = 1.0;
     private short _ID;
 
-    private String _role;
+    private Role _role;
     private Vector3 _size;
     private Vector3 _position;
 
-    public PlayingFootballer(BaseFootballerCharacteristics characteristics, String role) {
+    public PlayingFootballer(BaseFootballerCharacteristics characteristics, Role role) {
         _characteristics = characteristics;
         _role = role;
 
@@ -26,12 +27,12 @@ public class PlayingFootballer implements IPlayingFootballer {
     }
 
     @Override
-    public String role() {
+    public Role role() {
         return _role;
     }
 
     @Override
-    public void setRole(String role) {
+    public void setRole(Role role) {
         _role = role;
     }
 

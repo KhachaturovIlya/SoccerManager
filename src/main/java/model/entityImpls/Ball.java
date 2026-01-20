@@ -1,4 +1,4 @@
-package model.entityImplementations;
+package model.entityImpls;
 
 import model.entityInterfaces.IBall;
 import shared.Vector3;

@@ -1,4 +1,4 @@
-package model.entityImplementations;
+package model.entityImpls;
 
 import model.entityInterfaces.ICoach;
 import model.entityInterfaces.IFootballerProfile;
@@ -12,6 +12,11 @@ public class Club implements ITeam {
     private ICoach _headCoach;
     private List<IFootballerProfile> _players;
     private int _transferBudget;
+
+    public Club(String name, int transferBudget) {
+        _name = name;
+        _transferBudget = transferBudget;
+    }
 
     @Override
     public String name() {

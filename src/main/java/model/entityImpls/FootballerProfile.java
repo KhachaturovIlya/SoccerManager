@@ -1,4 +1,4 @@
-package model.entityImplementations;
+package model.entityImpls;
 
 import model.subclasses.BaseFootballerCharacteristics;
 import model.subclasses.Nationality;

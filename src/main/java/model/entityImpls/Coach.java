@@ -1,4 +1,4 @@
-package model.entityImplementations;
+package model.entityImpls;
 
 import model.entityInterfaces.ICoach;
 import model.subclasses.Nationality;

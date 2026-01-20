@@ -6,7 +6,6 @@ public class BaseFootballerCharacteristics {
 
     public BaseFootballerCharacteristics() {
         _characteristics = new short[FootballerCharacteristicsEnum.cnt];
-
     }
 
     public short characteristic(FootballerCharacteristicsEnum characteristic) {
