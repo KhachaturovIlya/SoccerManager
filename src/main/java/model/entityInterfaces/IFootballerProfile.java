@@ -1,6 +1,7 @@
 package model.entityInterfaces;
 
 import model.components.*;
+import model.subclasses.BaseFootballerCharacteristics;
 import model.subclasses.FootballerCharacteristicsEnum;
 import model.subclasses.Role;
 
@@ -19,6 +20,12 @@ public interface IFootballerProfile extends IHasName, IHasAge, IClubMember, IHas
     void decreaseTransferCost(int costLoss);
 
     short characteristic(FootballerCharacteristicsEnum characteristic);
+    BaseFootballerCharacteristics allCharacteristics();
     void increaseCharacteristci(FootballerCharacteristicsEnum characteristic, short add);
     void decreaseCharacteristci(FootballerCharacteristicsEnum characteristic, short loss);
+
+    boolean injured();
+    void setInjury(short daysToHeal);
+    short daysToHeal();
+    void updateInjury();
 }

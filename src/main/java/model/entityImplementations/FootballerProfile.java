@@ -16,6 +16,8 @@ public class FootballerProfile implements IFootballerProfile {
     private short _number;
     private short _age;
     private int _transfer_cost;
+    private boolean _injured = false;
+    private short _daysToHeal;
     private BaseFootballerCharacteristics _characteristics;
 
     public FootballerProfile(String name, Nationality nationality, String club, List<Role> prefered_roles, short number,
@@ -74,6 +76,11 @@ public class FootballerProfile implements IFootballerProfile {
     }
 
     @Override
+    public BaseFootballerCharacteristics allCharacteristics() {
+        return _characteristics;
+    }
+
+    @Override
     public void increaseCharacteristci(FootballerCharacteristicsEnum characteristic, short add) {
         _characteristics.increaseCharacteristic(characteristic, add);
     }
@@ -81,6 +88,27 @@ public class FootballerProfile implements IFootballerProfile {
     @Override
     public void decreaseCharacteristci(FootballerCharacteristicsEnum characteristic, short loss) {
         _characteristics.decreaseCharacteristic(characteristic, loss);
+    }
+
+    @Override
+    public boolean injured() {
+        return _injured;
+    }
+
+    @Override
+    public void setInjury(short daysToHeal) {
+        _injured = true;
+        _daysToHeal = daysToHeal;
+    }
+
+    @Override
+    public short daysToHeal() {
+        return _daysToHeal;
+    }
+
+    @Override
+    public void updateInjury() {
+        _daysToHeal -= 1;
     }
 
     @Override
