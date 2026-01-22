@@ -56,9 +56,9 @@ public class MatchStartService implements IMatchStartService {
 
     @Override
     public void addPlayerToStartingXI(short number, Role role) throws NoSuchElementException {
+        boolean suchRoleFound = !_freeRoles.stream().filter(r -> r == role).findAny().isEmpty();
 
-
-        if (_playersOnField < PLAYERS_ON_FIELD) {
+        if (isFormationSet() && _playersOnField < PLAYERS_ON_FIELD && suchRoleFound) {
 
             Optional<IFootballerProfile> profile = _team.findPlayerByNumber(number);
 
@@ -138,7 +138,24 @@ public class MatchStartService implements IMatchStartService {
     }
 
     @Override
+    public Map<Short, IPlayingFootballer> startingXI() {
+        return _startingXI;
+    }
+
+    @Override
+    public Map<Short, IPlayingFootballer> bench() {
+        return _bench;
+    }
+
+    @Override
     public boolean isFormationSet() {
         return !_formation.isEmpty();
+    }
+
+    @Override
+    public boolean isTeamReady() {
+        return _playersOnField == PLAYERS_ON_FIELD &&
+                _playersOnBench < MAX_PLAYERS_ON_BENCH &&
+                _playersOnBench > MIN_PLAYERS_ON_BENCH;
     }
 }
