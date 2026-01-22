@@ -2,6 +2,7 @@ package model.entityImpls;
 
 import model.entityInterfaces.ICoach;
 import model.entityInterfaces.IFootballerProfile;
+import model.entityInterfaces.IFormation;
 import model.entityInterfaces.ITeam;
 
 import java.util.List;
@@ -10,6 +11,7 @@ import java.util.Optional;
 public class Club implements ITeam {
     private String _name;
     private ICoach _headCoach;
+    private IFormation _defaultFormation;
     private List<IFootballerProfile> _players;
     private int _transferBudget;
 
@@ -31,6 +33,16 @@ public class Club implements ITeam {
     @Override
     public void setHeadCoach(ICoach coach) {
         _headCoach = coach;
+    }
+
+    @Override
+    public void setDefaultFormation(IFormation formation) {
+        _defaultFormation = formation;
+    }
+
+    @Override
+    public IFormation defaultFormation() {
+        return _defaultFormation;
     }
 
     @Override
