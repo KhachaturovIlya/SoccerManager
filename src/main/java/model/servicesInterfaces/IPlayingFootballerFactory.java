@@ -6,4 +6,5 @@ import model.subclasses.Role;
 
 public interface IPlayingFootballerFactory {
     IPlayingFootballer produce(IFootballerProfile player, Role role);
+    IPlayingFootballer produce(IFootballerProfile player);
 }
