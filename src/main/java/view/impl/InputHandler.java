@@ -42,10 +42,7 @@ public class InputHandler implements KeyListener, MouseListener, MouseMotionList
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        double x = e.getX();
-        double y = e.getY();
 
-        mouseClickBuffer.add(new Vector2(x, y));
     }
 
     @Override

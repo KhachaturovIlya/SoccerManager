@@ -8,22 +8,23 @@ public sealed abstract class Widget permits Button, Label, Container {
     static private int nextId = 0;
 
     final protected int id;
+    protected String name;
     protected boolean active;
 
     final protected Shape shape;
     final protected Color shapeColor;
-
-    protected String text;
+    
     final protected Color textColor;
 
     final protected Vector2 normalizedPosition;
 
-    public Widget(boolean active, Shape shape, Color shapeColor, String text, Color textColor, Vector2 normalizedPosition) {
+    public Widget(boolean active, String name, Shape shape, Color shapeColor,
+                  Color textColor, Vector2 normalizedPosition) {
         this.id = nextId++;
         this.active = active;
         this.shape = shape;
         this.shapeColor = shapeColor;
-        this.text = text;
+        this.name = name;
         this.textColor = textColor;
         this.normalizedPosition = normalizedPosition;
     }
@@ -44,8 +45,8 @@ public sealed abstract class Widget permits Button, Label, Container {
         return shapeColor;
     }
 
-    public String getText() {
-        return text;
+    public String getName() {
+        return name;
     }
 
     public Color getTextColor() {
@@ -56,8 +57,8 @@ public sealed abstract class Widget permits Button, Label, Container {
         return normalizedPosition;
     }
 
-    public void setText(String text) {
-        this.text = text;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public void disable() {

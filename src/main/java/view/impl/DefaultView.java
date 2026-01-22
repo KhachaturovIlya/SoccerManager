@@ -25,8 +25,6 @@ public class DefaultView implements IView {
 
     InputHandler inputHandler;
 
-    private final List<List<Integer>> interactedWidgets = new ArrayList<>();
-
     private void DrawWorldDTO(Graphics2D graphics) {
 
     }
@@ -142,7 +140,6 @@ public class DefaultView implements IView {
     @Override
     public List<Action> getActions(List<ActionWidgetDTO> actionWidgetDTOs) {
         List<Action> result = new ArrayList<>();
-        interactedWidgets.clear();
 
         Action action;
         while ((action = actionBuffer.poll()) != null) {
@@ -153,18 +150,13 @@ public class DefaultView implements IView {
         while ((mouseClick = mouseClickBuffer.poll()) != null) {
             for (int i = actionWidgetDTOs.size() - 1; i >= 0; i--) {
                 if (isPointInsideDTO(mouseClick.x, mouseClick.y, actionWidgetDTOs.get(i))) {
-                    interactedWidgets.add(actionWidgetDTOs.get(i).ids());
+                    result.add(new Action.WidgetClicked(actionWidgetDTOs.get(i).ids()));
                     break;
                 }
             }
         }
 
         return result;
-    }
-
-    @Override
-    public List<List<Integer>> getInteractedWidgets() {
-        return interactedWidgets;
     }
 
     private boolean isPointInsideDTO(double x, double y, ActionWidgetDTO actionWidgetDTO) {

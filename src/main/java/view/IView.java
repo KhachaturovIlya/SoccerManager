@@ -13,8 +13,6 @@ public interface IView {
 
     List<Action> getActions(List<ActionWidgetDTO> actionWidgetDTOs);
 
-    List<List<Integer>> getInteractedWidgets();
-
     void update();
 
     void close();

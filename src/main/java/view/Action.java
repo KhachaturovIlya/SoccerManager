@@ -9,4 +9,6 @@ public sealed interface Action {
     record WidgetClicked(List<Integer> ids) implements Action {}
 
     record Quit() implements Action {}
+
+    record shiftWidgetState(String stringId) implements Action {}
 }

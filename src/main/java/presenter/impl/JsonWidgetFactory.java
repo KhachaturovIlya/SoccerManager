@@ -54,9 +54,9 @@ public class JsonWidgetFactory implements IWidgetFileFactory {
         @JsonCreator
         WidgetMixin(
             @JsonProperty("active") boolean active,
+            @JsonProperty("name") String name,
             @JsonProperty("shape") Shape shape,
             @JsonProperty("shapeColor") Color shapeColor,
-            @JsonProperty("text") String text,
             @JsonProperty("textColor") Color textColor,
             @JsonProperty("normalizedPosition") Vector2 normalizedPosition
         ) {}
@@ -66,9 +66,9 @@ public class JsonWidgetFactory implements IWidgetFileFactory {
         @JsonCreator
         ContainerMixin(
             @JsonProperty("active") boolean active,
+            @JsonProperty("name") String name,
             @JsonProperty("shape") Shape shape,
             @JsonProperty("shapeColor") Color shapeColor,
-            @JsonProperty("text") String text,
             @JsonProperty("textColor") Color textColor,
             @JsonProperty("normalizedPosition") Vector2 normalizedPosition,
             @JsonProperty("children") List<Widget> children
@@ -79,12 +79,13 @@ public class JsonWidgetFactory implements IWidgetFileFactory {
         @JsonCreator
         ButtonMixin(
             @JsonProperty("active") boolean active,
+            @JsonProperty("name") String name,
             @JsonProperty("shape") Shape shape,
             @JsonProperty("shapeColor") Color shapeColor,
-            @JsonProperty("text") String text,
             @JsonProperty("textColor") Color textColor,
             @JsonProperty("normalizedPosition") Vector2 normalizedPosition,
-            @JsonProperty("clickActions") List<String> actions
+            @JsonProperty("clickActions") List<String> actions,
+            @JsonProperty("actionsContext") List<String> context
         ) {}
     }
 
@@ -92,9 +93,9 @@ public class JsonWidgetFactory implements IWidgetFileFactory {
         @JsonCreator
         LabelMixin(
             @JsonProperty("active") boolean active,
+            @JsonProperty("name") String name,
             @JsonProperty("shape") Shape shape,
             @JsonProperty("shapeColor") Color shapeColor,
-            @JsonProperty("text") String text,
             @JsonProperty("textColor") Color textColor,
             @JsonProperty("normalizedPosition") Vector2 normalizedPosition
         ) {}

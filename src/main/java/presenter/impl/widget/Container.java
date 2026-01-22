@@ -12,9 +12,9 @@ import java.util.Map;
 public final class Container extends Widget {
     Map<Integer, Widget> children;
 
-    public Container(boolean active, Shape shape, Color shapeColor, String text, Color textColor,
+    public Container(boolean active, String name, Shape shape, Color shapeColor, Color textColor,
               Vector2 normalizedPosition, List<Widget> children) {
-        super(active, shape, shapeColor, text, textColor, normalizedPosition);
+        super(active, name, shape, shapeColor, textColor, normalizedPosition);
 
         Map<Integer, Widget> map = new HashMap<>();
         for (Widget widget : children) {
@@ -51,5 +51,25 @@ public final class Container extends Widget {
             }
         }
         return current;
+    }
+
+    public Widget findChild(String stringId) {
+        if (stringId ==  null || stringId.isEmpty())
+            throw new IllegalArgumentException("stringId cannot be null or empty");
+
+        if (stringId.equals(this.getName())) {
+            return this;
+        }
+
+        for (Widget widget : children.values()) {
+            if (widget instanceof Container container) {
+                Widget subFound = container.findChild(stringId);
+                if (subFound != null) return subFound;
+            } else if (widget.getName().equals(stringId)) {
+                return widget;
+            }
+        }
+
+        return null;
     }
 }

@@ -1,6 +1,8 @@
 package presenter.impl;
 
 import presenter.IPresenter;
+import presenter.impl.commands.QuitCmd;
+import presenter.impl.commands.ShiftWidgetStateCmd;
 import presenter.impl.interfaces.IWidgetFileFactory;
 import presenter.impl.widget.Button;
 import presenter.impl.widget.Container;
@@ -36,7 +38,7 @@ public class DefaultPresenter implements IPresenter {
         return new VisualWidgetDTO(
             widget.getShape().compressedCopy(parentWidth, parentHeight),
             widget.getShapeColor(),
-            widget.getText(),
+            widget.getName(),
             widget.getTextColor(),
             globalNormalizedPosition,
             widget instanceof Button
@@ -116,7 +118,11 @@ public class DefaultPresenter implements IPresenter {
         return actionWidgetDTOs;
     }
 
-    private void shutdown() {
+    public Map<Integer, Widget> getWidgets() {
+        return widgets;
+    }
+
+    public void shutdown() {
         System.out.println("Shutting down...");
 
         try {
@@ -130,31 +136,77 @@ public class DefaultPresenter implements IPresenter {
     }
 
     private void loadCommands() {
-        commandLibrary.registerCommand("EXIT",
-            this::shutdown
-        );
+        try {
+            commandLibrary.registerCommand("EXIT",
+                new QuitCmd(this)
+            );
+        } catch (Exception e) {
+            System.err.println("Failed to load exit command!");
+        }
+
+        try {
+            commandLibrary.registerCommand("SHIFT_WIDGET_STATE",
+                new ShiftWidgetStateCmd(this)
+            );
+        } catch (Exception e) {
+            System.err.println("Failed to load SHIFT_WIDGET_STATE!");
+        }
     }
 
-    private void handleButtonClick(List<Integer> ids) {
+    public static Widget findWidgetByPath(Widget current, List<Integer> ids) {
+        if (current instanceof Container container) {
+            return container.findChild(ids);
+        } else if (ids.size() > 1) {
+            throw new RuntimeException("Tried to call children not in container class!");
+        } else if (ids.size() == 1 && current.getId() == ids.getFirst()) {
+            return current;
+        }
+        return null;
+    }
+
+    public static Widget findWidgetByPath(Widget current, String nameId) {
+        if (current instanceof Container container) {
+            return container.findChild(nameId);
+        }
+        return null;
+    }
+
+    private void handleWidgetAction(Widget widget) throws Exception {
+        if (widget instanceof Button button) {
+            for (String command : button.getClickActions()) {
+                commandLibrary.getCommand(command).execute(button.getActionContext());
+            }
+        }
+    }
+
+    private void handleButtonClick(List<Integer> ids) throws Exception {
         if (ids == null || ids.isEmpty()) return;
 
         Widget current = widgets.get(ids.getFirst());
         if (current == null) throw new RuntimeException("No widget with id " + ids.getFirst());
 
-        if (current instanceof Container container) {
-            current = container.findChild(ids);
-        } else if (ids.size() > 1) {
-            throw new RuntimeException("Tried to call children not in container class!");
-        }
+        current = findWidgetByPath(current, ids);
 
-        if (current instanceof Button button) {
-            for (String command : button.getClickActions()) {
-                commandLibrary.getCommand(command).run();
+        handleWidgetAction(current);
+    }
+
+    public void shiftWidgetState(String widgetId) {
+        if (widgetId == null) return;
+
+        for (Widget widget : widgets.values()) {
+            Widget found = findWidgetByPath(widget, widgetId);
+            if (found != null) {
+                if (found.isActive()) {
+                    found.disable();
+                } else {
+                    found.enable();
+                }
+                break;
             }
         }
     }
 
-    private void processActions(List<Action> actions) {
+    private void processActions(List<Action> actions) throws Exception {
         for  (Action action : actions) {
             System.out.println("Working with action: " + action);
             switch (action) {
@@ -163,6 +215,9 @@ public class DefaultPresenter implements IPresenter {
                 }
                 case Action.Quit() -> {
                     shutdown();
+                }
+                case Action.shiftWidgetState(String stringId) -> {
+                    shiftWidgetState(stringId);
                 }
             }
         }
@@ -178,16 +233,12 @@ public class DefaultPresenter implements IPresenter {
     }
 
     @Override
-    public boolean run(double deltaTime) {
+    public boolean run(double deltaTime) throws Exception {
         UserInterfaceDTO uiDTO = new UserInterfaceDTO(prepareVisualDTO());
 
         view.renderUI(uiDTO);
 
         processActions(view.getActions(prepareActionDTO()));
-        for (List<Integer> pressedButtonsIds : view.getInteractedWidgets()) {
-            System.out.println("Pressed buttons: " + pressedButtonsIds);
-            handleButtonClick(pressedButtonsIds);
-        }
 
         view.update();
 
