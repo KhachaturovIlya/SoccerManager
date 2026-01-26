@@ -1,12 +1,11 @@
-package presenter.impl.commands;
+package presenter.impl.commands.action_commands;
 
 import presenter.impl.DefaultPresenter;
-import presenter.ICommand;
 
 import java.util.List;
 
 public class QuitCmd extends Command {
-    public QuitCmd(DefaultPresenter defaultPresenter) throws Exception {
+    public QuitCmd(DefaultPresenter defaultPresenter) {
         super(defaultPresenter);
     }
 

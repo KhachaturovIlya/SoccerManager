@@ -3,9 +3,6 @@ package presenter.impl;
 import presenter.ILangService;
 import presenter.IPresenter;
 import presenter.Scene;
-import presenter.impl.commands.ChangeSceneCmd;
-import presenter.impl.commands.QuitCmd;
-import presenter.impl.commands.ShiftWidgetStateCmd;
 import presenter.impl.widget.Button;
 import presenter.impl.widget.Container;
 import presenter.impl.widget.Widget;
@@ -31,7 +28,7 @@ public class DefaultPresenter implements IPresenter {
     private final Map<String, Map<Integer, Widget>> scenes;
     private Map<Integer, Widget> widgets = null;
 
-    private final CommandLibrary commandLibrary = new CommandLibrary();
+    private final CommandLibrary commandLibrary;
     private final ILangService langService;
 
     // Private DTO methods:
@@ -41,12 +38,36 @@ public class DefaultPresenter implements IPresenter {
         return new VisualWidgetDTO(
             widget.getShape().compressedCopy(parentWidth, parentHeight),
             widget.getShapeColor(),
-            langService.getText(widget.getTextId()),
+            processText(widget),
             widget.getTextColor(),
             widget.getTextType(),
             globalNormalizedPosition,
             widget instanceof Button
         );
+    }
+
+    private String processText(Widget widget) {
+        String template = langService.getText(widget.getTextId());
+
+        if (widget.getTextContext() == null || widget.getTextContext().isEmpty()) {
+            return template;
+        }
+
+        List<String> context = new ArrayList<>();
+
+        for (String contextCommand : widget.getTextContext()) {
+            try {
+                context.addAll(commandLibrary.getContextCommand(contextCommand).execute());
+            } catch (Exception e) {
+                return template;
+            }
+        }
+
+        try {
+            return String.format(template, context.toArray());
+        } catch (Exception e) {
+            return template;
+        }
     }
 
     private void flattenContainerToVisualDto(Map<Integer, Widget> widgets, List<VisualWidgetDTO> visualWidgetDTOs,
@@ -142,32 +163,6 @@ public class DefaultPresenter implements IPresenter {
 
         view.close();
         this.cycleState = false;
-    }
-
-    private void loadCommands() {
-        try {
-            commandLibrary.registerCommand("EXIT",
-                new QuitCmd(this)
-            );
-        } catch (Exception e) {
-            System.err.println("Failed to load exit command!");
-        }
-
-        try {
-            commandLibrary.registerCommand("SHIFT_WIDGET_STATE",
-                new ShiftWidgetStateCmd(this)
-            );
-        } catch (Exception e) {
-            System.err.println("Failed to load SHIFT_WIDGET_STATE!");
-        }
-
-        try {
-            commandLibrary.registerCommand("LOAD_NEW_SCENE",
-                new ChangeSceneCmd(this)
-            );
-        } catch (Exception e) {
-            System.err.println("Failed to load LOAD_NEW_SCENE!");
-        }
     }
 
     public static Widget findWidgetByPath(Widget current, List<Integer> ids) {
@@ -268,7 +263,8 @@ public class DefaultPresenter implements IPresenter {
             }
         }
 
-        this.loadCommands();
+        CommandFactory commandFactory = new CommandFactory(this);
+        this.commandLibrary = commandFactory.createCommandLibrary();
     }
 
     @Override

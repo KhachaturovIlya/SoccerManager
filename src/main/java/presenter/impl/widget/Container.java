@@ -1,5 +1,6 @@
 package presenter.impl.widget;
 
+import presenter.impl.interfaces.ILayoutStrategy;
 import shared.Color;
 import shared.Shape;
 import shared.TextType;
@@ -14,8 +15,9 @@ public final class Container extends Widget {
     Map<Integer, Widget> children;
 
     public Container(boolean active, String name, Shape shape, Color shapeColor,
-                     String textId, Color textColor, TextType textType, Vector2 normalizedPosition, List<Widget> children) {
-        super(active, name, shape, shapeColor, textId, textColor, textType, normalizedPosition);
+                     String textId, Color textColor, TextType textType, List<String> textContext,
+                     Vector2 normalizedPosition, List<Widget> children) {
+        super(active, name, shape, shapeColor, textId, textColor, textType, textContext, normalizedPosition);
 
         Map<Integer, Widget> map = new HashMap<>();
         for (Widget widget : children) {

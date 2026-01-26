@@ -1,11 +1,11 @@
-package presenter.impl.commands;
+package presenter.impl.commands.action_commands;
 
 import presenter.impl.DefaultPresenter;
 
 import java.util.List;
 
 public class ChangeSceneCmd extends Command {
-    public ChangeSceneCmd(DefaultPresenter defaultPresenter) throws Exception {
+    public ChangeSceneCmd(DefaultPresenter defaultPresenter) {
         super(defaultPresenter);
     }
 

@@ -61,6 +61,7 @@ public class JsonWidgetFactory implements IWidgetFileFactory {
             @JsonProperty("textId") String textId,
             @JsonProperty("textColor") Color textColor,
             @JsonProperty("textType") TextType textType,
+            @JsonProperty("textContext") List<String> textContext,
             @JsonProperty("normalizedPosition") Vector2 normalizedPosition
         ) {}
     }
@@ -75,6 +76,7 @@ public class JsonWidgetFactory implements IWidgetFileFactory {
             @JsonProperty("textId") String textId,
             @JsonProperty("textColor") Color textColor,
             @JsonProperty("textType") TextType textType,
+            @JsonProperty("textContext") List<String> textContext,
             @JsonProperty("normalizedPosition") Vector2 normalizedPosition,
             @JsonProperty("children") List<Widget> children
         ) {}
@@ -90,6 +92,7 @@ public class JsonWidgetFactory implements IWidgetFileFactory {
             @JsonProperty("textId") String textId,
             @JsonProperty("textColor") Color textColor,
             @JsonProperty("textType") TextType textType,
+            @JsonProperty("textContext") List<String> textContext,
             @JsonProperty("normalizedPosition") Vector2 normalizedPosition,
             @JsonProperty("clickActions") List<String> actions,
             @JsonProperty("actionsContext") List<String> context
@@ -106,6 +109,7 @@ public class JsonWidgetFactory implements IWidgetFileFactory {
             @JsonProperty("textId") String textId,
             @JsonProperty("textColor") Color textColor,
             @JsonProperty("textType") TextType textType,
+            @JsonProperty("textContext") List<String> textContext,
             @JsonProperty("normalizedPosition") Vector2 normalizedPosition
         ) {}
     }

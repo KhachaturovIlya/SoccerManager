@@ -5,6 +5,8 @@ import shared.Shape;
 import shared.TextType;
 import shared.Vector2;
 
+import java.util.List;
+
 public sealed abstract class Widget permits Button, Label, Container {
     static private int nextId = 0;
 
@@ -18,11 +20,12 @@ public sealed abstract class Widget permits Button, Label, Container {
     final protected String textId;
     final protected Color textColor;
     final protected TextType textType;
+    final protected List<String> TextContext;
 
-    final protected Vector2 normalizedPosition;
+    protected Vector2 normalizedPosition;
 
     public Widget(boolean active, String name, Shape shape, Color shapeColor,
-                  String textId, Color textColor, TextType textType, Vector2 normalizedPosition) {
+                  String textId, Color textColor, TextType textType, List<String> textContext, Vector2 normalizedPosition) {
         this.id = nextId++;
         this.name = name;
         this.active = active;
@@ -31,6 +34,7 @@ public sealed abstract class Widget permits Button, Label, Container {
         this.textId = textId;
         this.textColor = textColor;
         this.textType = textType;
+        this.TextContext = textContext;
         this.normalizedPosition = normalizedPosition;
     }
 
@@ -66,12 +70,20 @@ public sealed abstract class Widget permits Button, Label, Container {
         return textType;
     }
 
+    public List<String> getTextContext() {
+        return TextContext;
+    }
+
     public Vector2 getNormalizedPosition() {
         return normalizedPosition;
     }
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public void setNormalizedPosition(Vector2 normalizedPosition) {
+        this.normalizedPosition = normalizedPosition;
     }
 
     public void disable() {

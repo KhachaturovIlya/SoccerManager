@@ -94,7 +94,7 @@ public class DefaultView implements IView {
                 FontMetrics metrics = graphics.getFontMetrics(graphics.getFont());
 
                 int textX = (int) (x + (w - metrics.stringWidth(widgetDTO.text())) / 2);
-                int textY = (int) (y + ((h - metrics.getHeight()) / 2) + metrics.getAscent());
+                int textY = (int) (y + (h - (metrics.getAscent() + metrics.getDescent())) / 2 + metrics.getAscent());
 
                 graphics.drawString(widgetDTO.text(), textX, textY);
             }

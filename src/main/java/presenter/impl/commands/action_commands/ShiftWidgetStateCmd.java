@@ -1,12 +1,11 @@
-package presenter.impl.commands;
+package presenter.impl.commands.action_commands;
 
 import presenter.impl.DefaultPresenter;
-import presenter.impl.widget.Widget;
 
 import java.util.List;
 
 public class ShiftWidgetStateCmd extends Command {
-    public ShiftWidgetStateCmd(DefaultPresenter defaultPresenter) throws Exception {
+    public ShiftWidgetStateCmd(DefaultPresenter defaultPresenter) {
         super(defaultPresenter);
     }
 

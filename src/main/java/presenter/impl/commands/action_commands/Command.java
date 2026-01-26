@@ -1,14 +1,11 @@
-package presenter.impl.commands;
+package presenter.impl.commands.action_commands;
 
 import presenter.ICommand;
 import presenter.impl.DefaultPresenter;
 
 public abstract class Command implements ICommand {
     DefaultPresenter defaultPresenter;
-    public Command(DefaultPresenter defaultPresenter) throws Exception {
-        if (defaultPresenter == null) {
-            throw new Exception("Presenter nod loaded");
-        }
+    public Command(DefaultPresenter defaultPresenter) {
         this.defaultPresenter = defaultPresenter;
     }
 

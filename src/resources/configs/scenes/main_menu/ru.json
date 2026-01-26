@@ -7,6 +7,8 @@
   "ui.main_menu.LEAGUE_STANDINGS": "ТУРНИРНАЯ ТАБЛИЦА",
   "ui.main_menu.SETTINGS": "НАСТРОЙКИ",
   "ui.main_menu.QUIT": "ВЫЙТИ ИЗ ИГРЫ",
-
+  "ui.main_menu.CITY_SCORE" : "City",
+  "ui.main_menu.PLAYER_SCORE" : "FC Berloga",
+  "ui.main_menu.BUDGET" : "Бюджет: %s $",
   "ui.main_menu.UPCOMING_MATCH": "СЛЕДУЮЩИЙ СОПЕРНИК"
 }
