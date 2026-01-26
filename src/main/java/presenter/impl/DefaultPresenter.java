@@ -3,13 +3,8 @@ package presenter.impl;
 import presenter.ILangService;
 import presenter.IPresenter;
 import presenter.Scene;
-import presenter.impl.widget.Button;
-import presenter.impl.widget.Container;
-import presenter.impl.widget.Widget;
-import shared.ActionWidgetDTO;
-import shared.UserInterfaceDTO;
-import shared.Vector2;
-import shared.VisualWidgetDTO;
+import presenter.impl.widget.*;
+import shared.*;
 import view.Action;
 import view.IView;
 
@@ -35,29 +30,32 @@ public class DefaultPresenter implements IPresenter {
 
     private VisualWidgetDTO toVisualDtoFlatten(Widget widget, Vector2 globalNormalizedPosition,
                                                double parentWidth, double parentHeight) {
+        TextConfig textConfig = widget.getTextConfig();
+
         return new VisualWidgetDTO(
             widget.getShape().compressedCopy(parentWidth, parentHeight),
             widget.getShapeColor(),
-            processText(widget),
-            widget.getTextColor(),
-            widget.getTextType(),
+            processText(textConfig),
+            textConfig.color(),
+            textConfig.type(),
             globalNormalizedPosition,
             widget instanceof Button
         );
     }
 
-    private String processText(Widget widget) {
-        String template = langService.getText(widget.getTextId());
+    private String processText(TextConfig textConfig) {
+        String template = langService.getText(textConfig.id());
 
-        if (widget.getTextContext() == null || widget.getTextContext().isEmpty()) {
+        if (textConfig.bindings() == null || textConfig.bindings().isEmpty()) {
             return template;
         }
 
         List<String> context = new ArrayList<>();
 
-        for (String contextCommand : widget.getTextContext()) {
+        for (DataBinding binding : textConfig.bindings()) {
             try {
-                context.addAll(commandLibrary.getContextCommand(contextCommand).execute());
+                String data = commandLibrary.getContextCommand(binding.query()).execute(binding.subjectId());
+                context.add(data != null ? data : "???");
             } catch (Exception e) {
                 return template;
             }

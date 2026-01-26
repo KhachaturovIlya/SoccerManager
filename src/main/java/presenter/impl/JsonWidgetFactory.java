@@ -8,14 +8,8 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
 import presenter.impl.interfaces.IWidgetFileFactory;
-import presenter.impl.widget.Button;
-import presenter.impl.widget.Container;
-import presenter.impl.widget.Label;
-import presenter.impl.widget.Widget;
-import shared.Color;
-import shared.Shape;
-import shared.TextType;
-import shared.Vector2;
+import presenter.impl.widget.*;
+import shared.*;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -51,20 +45,7 @@ public class JsonWidgetFactory implements IWidgetFileFactory {
         @JsonSubTypes.Type(value = Label.class, name = "label"),
         @JsonSubTypes.Type(value = Container.class, name = "container")
     })
-    public static abstract class WidgetMixin {
-        @JsonCreator
-        WidgetMixin(
-            @JsonProperty("active") boolean active,
-            @JsonProperty("name") String name,
-            @JsonProperty("shape") Shape shape,
-            @JsonProperty("shapeColor") Color shapeColor,
-            @JsonProperty("textId") String textId,
-            @JsonProperty("textColor") Color textColor,
-            @JsonProperty("textType") TextType textType,
-            @JsonProperty("textContext") List<String> textContext,
-            @JsonProperty("normalizedPosition") Vector2 normalizedPosition
-        ) {}
-    }
+    public static abstract class WidgetMixin {}
 
     public abstract static class ContainerMixin {
         @JsonCreator
@@ -73,10 +54,7 @@ public class JsonWidgetFactory implements IWidgetFileFactory {
             @JsonProperty("name") String name,
             @JsonProperty("shape") Shape shape,
             @JsonProperty("shapeColor") Color shapeColor,
-            @JsonProperty("textId") String textId,
-            @JsonProperty("textColor") Color textColor,
-            @JsonProperty("textType") TextType textType,
-            @JsonProperty("textContext") List<String> textContext,
+            @JsonProperty("textConfig") TextConfig textConfig,
             @JsonProperty("normalizedPosition") Vector2 normalizedPosition,
             @JsonProperty("children") List<Widget> children
         ) {}
@@ -89,10 +67,7 @@ public class JsonWidgetFactory implements IWidgetFileFactory {
             @JsonProperty("name") String name,
             @JsonProperty("shape") Shape shape,
             @JsonProperty("shapeColor") Color shapeColor,
-            @JsonProperty("textId") String textId,
-            @JsonProperty("textColor") Color textColor,
-            @JsonProperty("textType") TextType textType,
-            @JsonProperty("textContext") List<String> textContext,
+            @JsonProperty("textConfig") TextConfig textConfig,
             @JsonProperty("normalizedPosition") Vector2 normalizedPosition,
             @JsonProperty("clickActions") List<String> actions,
             @JsonProperty("actionsContext") List<String> context
@@ -106,10 +81,7 @@ public class JsonWidgetFactory implements IWidgetFileFactory {
             @JsonProperty("name") String name,
             @JsonProperty("shape") Shape shape,
             @JsonProperty("shapeColor") Color shapeColor,
-            @JsonProperty("textId") String textId,
-            @JsonProperty("textColor") Color textColor,
-            @JsonProperty("textType") TextType textType,
-            @JsonProperty("textContext") List<String> textContext,
+            @JsonProperty("textConfig") TextConfig textConfig,
             @JsonProperty("normalizedPosition") Vector2 normalizedPosition
         ) {}
     }

@@ -1,23 +1,19 @@
 package presenter.impl.widget;
 
 import presenter.impl.interfaces.ILayoutStrategy;
-import shared.Color;
-import shared.Shape;
-import shared.TextType;
-import shared.Vector2;
+import shared.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public final class Container extends Widget {
+public non-sealed class Container extends Widget {
     Map<Integer, Widget> children;
 
     public Container(boolean active, String name, Shape shape, Color shapeColor,
-                     String textId, Color textColor, TextType textType, List<String> textContext,
-                     Vector2 normalizedPosition, List<Widget> children) {
-        super(active, name, shape, shapeColor, textId, textColor, textType, textContext, normalizedPosition);
+                     TextConfig textConfig, Vector2 normalizedPosition, List<Widget> children) {
+        super(active, name, shape, shapeColor, textConfig, normalizedPosition);
 
         Map<Integer, Widget> map = new HashMap<>();
         for (Widget widget : children) {

@@ -1,10 +1,7 @@
 package presenter.impl.widget;
 
 import presenter.ICommand;
-import shared.Color;
-import shared.Shape;
-import shared.TextType;
-import shared.Vector2;
+import shared.*;
 
 import java.util.List;
 
@@ -12,10 +9,9 @@ public final class Button extends Widget {
     private final List<String> clickActions;
     private final List<String> actionContext;
 
-    public Button(boolean active, String name, Shape shape, Color shapeColor, String textId, Color textColor,
-                  TextType textType, List<String> textContext, Vector2 normalizedPosition,
-                  List<String> clickActions, List<String> actionContext) {
-        super(active, name, shape, shapeColor, textId, textColor, textType, textContext, normalizedPosition);
+    public Button(boolean active, String name, Shape shape, Color shapeColor, TextConfig textConfig,
+                  Vector2 normalizedPosition, List<String> clickActions, List<String> actionContext) {
+        super(active, name, shape, shapeColor, textConfig, normalizedPosition);
         this.clickActions = clickActions;
         this.actionContext = actionContext;
     }

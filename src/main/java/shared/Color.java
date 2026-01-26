@@ -12,4 +12,8 @@ public record Color(
                ((green & 0xFF) << 8 ) |
                ((blue  & 0xFF));
     }
+
+    public static Color transparent() {
+        return new Color((short) 0, (short) 0, (short) 0, (short) 0);
+    }
 }

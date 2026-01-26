@@ -1,9 +1,6 @@
 package presenter.impl.widget;
 
-import shared.Color;
-import shared.Shape;
-import shared.TextType;
-import shared.Vector2;
+import shared.*;
 
 import java.util.List;
 
@@ -17,24 +14,18 @@ public sealed abstract class Widget permits Button, Label, Container {
     final protected Shape shape;
     final protected Color shapeColor;
 
-    final protected String textId;
-    final protected Color textColor;
-    final protected TextType textType;
-    final protected List<String> TextContext;
+    protected TextConfig textConfig;
 
     protected Vector2 normalizedPosition;
 
     public Widget(boolean active, String name, Shape shape, Color shapeColor,
-                  String textId, Color textColor, TextType textType, List<String> textContext, Vector2 normalizedPosition) {
+                  TextConfig textConfig, Vector2 normalizedPosition) {
         this.id = nextId++;
         this.name = name;
         this.active = active;
         this.shape = shape;
         this.shapeColor = shapeColor;
-        this.textId = textId;
-        this.textColor = textColor;
-        this.textType = textType;
-        this.TextContext = textContext;
+        this.textConfig = textConfig;
         this.normalizedPosition = normalizedPosition;
     }
 
@@ -58,20 +49,8 @@ public sealed abstract class Widget permits Button, Label, Container {
         return name;
     }
 
-    public String getTextId() {
-        return textId;
-    }
-
-    public Color getTextColor() {
-        return textColor;
-    }
-
-    public TextType getTextType() {
-        return textType;
-    }
-
-    public List<String> getTextContext() {
-        return TextContext;
+    public TextConfig getTextConfig() {
+        return textConfig;
     }
 
     public Vector2 getNormalizedPosition() {
