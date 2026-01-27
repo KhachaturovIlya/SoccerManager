@@ -1,16 +1,13 @@
 package model.servicesImpls;
 
-import model.entityInterfaces.IFootballerProfile;
-import model.entityInterfaces.IFormation;
-import model.entityInterfaces.IPlayingFootballer;
-import model.entityInterfaces.ITeam;
-import model.servicesInterfaces.IMatchStartService;
-import model.servicesInterfaces.IPlayingFootballerFactory;
+import model.entityInterfaces.*;
+import model.servicesInterfaces.ISquadFactory;
+import model.servicesInterfaces.ISquadService;
 import model.subclasses.Role;
 
 import java.util.*;
 
-public class MatchStartService implements IMatchStartService {
+public class SquadService implements ISquadService {
     private static final short PLAYERS_ON_FIELD = 11;
     private static final short MAX_PLAYERS_ON_BENCH = 11;
     private static final short MIN_PLAYERS_ON_BENCH = 9;
@@ -19,36 +16,33 @@ public class MatchStartService implements IMatchStartService {
 
     private short _playersOnField;
     private short _playersOnBench;
-    private Map<Short, IPlayingFootballer> _startingXI;
-    private Map<Short, IPlayingFootballer> _bench;
+    private Map<Short, Role> _startingXI;
+    private ArrayList<Short> _bench;
 
     private Optional<IFormation> _formation;
     private List<Role> _freeRoles;
     private List<Role> _occupiedRoles;
 
-    private IPlayingFootballerFactory _factory;
+	private ISquadFactory _factory;
 
     private void permutatePlayers() {
-        _startingXI.values().forEach(player -> {
-            var roleOptional = _freeRoles.stream().filter(r -> r == player.role()).findAny();
+        _startingXI.values().forEach(oldRole -> {
+            var roleOptional = _freeRoles.stream().filter(r -> r == oldRole).findAny();
             if (!roleOptional.isEmpty()) {
                 _freeRoles.remove(roleOptional.get());
                 _occupiedRoles.add(roleOptional.get());
             } else {
-                Role role = Collections.min(_freeRoles,
-                        Comparator.comparingInt(x -> Math.abs(x.pos - player.role().pos)));
-                player.setRole(role);
-                _freeRoles.remove(role);
-                _occupiedRoles.add(role);
+                Role newRole = Collections.min(_freeRoles,
+                        Comparator.comparingInt(x -> Math.abs(x.pos - oldRole.pos)));
+                _freeRoles.remove(newRole);
+                _occupiedRoles.add(newRole);
             }
         });
     }
 
-
-
-    public MatchStartService(IPlayingFootballerFactory factory) {
-        _factory = factory;
-    }
+	public SquadService(ISquadFactory factory) {
+		_factory = factory;
+	}
 
     public void setTeam(ITeam team) {
         _team = team;
@@ -68,8 +62,7 @@ public class MatchStartService implements IMatchStartService {
                 );
             }
 
-            var player = _factory.produce(profile.get(), role);
-            _startingXI.put(number, player);
+            _startingXI.put(number, role);
             _playersOnField += 1;
         }
     }
@@ -85,8 +78,7 @@ public class MatchStartService implements IMatchStartService {
                 );
             }
 
-            var player = _factory.produce(profile.get());
-            _bench.put(number, player);
+            _bench.add(number);
             _playersOnBench += 1;
         }
     }
@@ -101,9 +93,9 @@ public class MatchStartService implements IMatchStartService {
             );
         }
 
-        var player = _factory.produce(profile.get());
+		Role role = _startingXI.get(numberOld);
         _startingXI.remove(numberOld);
-        _startingXI.put(numberNew, player);
+        _startingXI.put(numberNew, role);
     }
 
     @Override
@@ -116,17 +108,16 @@ public class MatchStartService implements IMatchStartService {
             );
         }
 
-        var player = _factory.produce(profile.get());
         _bench.remove(numberOld);
-        _bench.put(numberNew, player);
+        _bench.add(numberNew);
     }
 
     @Override
     public void swapPlayersInStartingXI(short numberX, short numberY) {
-        Role roleX = _startingXI.get(numberX).role();
-        Role roleY = _startingXI.get(numberY).role();
-        _startingXI.get(numberX).setRole(roleY);
-        _startingXI.get(numberY).setRole(roleX);
+        Role roleX = _startingXI.get(numberX);
+        Role roleY = _startingXI.get(numberY);
+        _startingXI.replace(numberX, roleY);
+        _startingXI.replace(numberY, roleX);
     }
 
     @Override
@@ -138,12 +129,12 @@ public class MatchStartService implements IMatchStartService {
     }
 
     @Override
-    public Map<Short, IPlayingFootballer> startingXI() {
+    public Map<Short, Role> startingXI() {
         return _startingXI;
     }
 
     @Override
-    public Map<Short, IPlayingFootballer> bench() {
+    public ArrayList<Short> bench() {
         return _bench;
     }
 
@@ -158,4 +149,21 @@ public class MatchStartService implements IMatchStartService {
                 _playersOnBench < MAX_PLAYERS_ON_BENCH &&
                 _playersOnBench > MIN_PLAYERS_ON_BENCH;
     }
+
+	@Override
+	public ISquad result() {
+		if (isTeamReady()) {
+			return _factory.create(_formation.get(), _startingXI, _bench);
+		}
+		return null;
+	}
+
+	@Override
+	public void addSquadToChange(ISquad squad) {
+		_formation = Optional.of(squad.formation());
+		_startingXI = squad.startingXI();
+		_bench = squad.bench();
+		_freeRoles.clear();
+		Arrays.stream(_formation.get().roles()).forEach(role -> _occupiedRoles.add(role));
+	}
 }
