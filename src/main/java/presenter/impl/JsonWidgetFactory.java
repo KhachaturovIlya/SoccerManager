@@ -1,14 +1,20 @@
 package presenter.impl;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
 import presenter.impl.interfaces.IWidgetFileFactory;
+import presenter.impl.widget.*;
+import shared.*;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BiFunction;
 
@@ -17,56 +23,105 @@ public class JsonWidgetFactory implements IWidgetFileFactory {
     final private ObjectMapper mapper;
     final static private AtomicInteger counter = new AtomicInteger(0);
 
+    @JsonTypeInfo(
+        use = JsonTypeInfo.Id.NAME,
+        include = JsonTypeInfo.As.PROPERTY,
+        property = "type"
+    )
+    @JsonSubTypes({
+        @JsonSubTypes.Type(value = Shape.Rectangle.class, name = "rectangle"),
+        @JsonSubTypes.Type(value = Shape.Circle.class, name = "circle"),
+        @JsonSubTypes.Type(value = Shape.Square.class, name = "square")
+    })
+    public static abstract class ShapeMixin {}
+
+    @JsonTypeInfo(
+        use = JsonTypeInfo.Id.NAME,
+        include = JsonTypeInfo.As.PROPERTY,
+        property = "type"
+    )
+    @JsonSubTypes({
+        @JsonSubTypes.Type(value = Button.class, name = "button"),
+        @JsonSubTypes.Type(value = Label.class, name = "label"),
+        @JsonSubTypes.Type(value = Container.class, name = "container")
+    })
+    public static abstract class WidgetMixin {}
+
+    public abstract static class ContainerMixin {
+        @JsonCreator
+        ContainerMixin(
+            @JsonProperty("active") boolean active,
+            @JsonProperty("name") String name,
+            @JsonProperty("shape") Shape shape,
+            @JsonProperty("shapeColor") Color shapeColor,
+            @JsonProperty("textConfig") TextConfig textConfig,
+            @JsonProperty("normalizedPosition") Vector2 normalizedPosition,
+            @JsonProperty("children") List<Widget> children
+        ) {}
+    }
+
+    public abstract static class ButtonMixin {
+        @JsonCreator
+        ButtonMixin(
+            @JsonProperty("active") boolean active,
+            @JsonProperty("name") String name,
+            @JsonProperty("shape") Shape shape,
+            @JsonProperty("shapeColor") Color shapeColor,
+            @JsonProperty("textConfig") TextConfig textConfig,
+            @JsonProperty("normalizedPosition") Vector2 normalizedPosition,
+            @JsonProperty("clickActions") List<String> actions,
+            @JsonProperty("actionsContext") List<String> context
+        ) {}
+    }
+
+    public abstract static class LabelMixin {
+        @JsonCreator
+        LabelMixin(
+            @JsonProperty("active") boolean active,
+            @JsonProperty("name") String name,
+            @JsonProperty("shape") Shape shape,
+            @JsonProperty("shapeColor") Color shapeColor,
+            @JsonProperty("textConfig") TextConfig textConfig,
+            @JsonProperty("normalizedPosition") Vector2 normalizedPosition
+        ) {}
+    }
+
+    public static abstract class Vector2Mixin {
+        Vector2Mixin(@JsonProperty("x") double x, @JsonProperty("y") double y) {}
+    }
+
     public JsonWidgetFactory(Path srcPath) {
         this.srcPath = srcPath;
         mapper = new ObjectMapper();
+
+        this.mapper.registerModule(new ParameterNamesModule());
+
+        this.mapper.addMixIn(Shape.class, ShapeMixin.class);
+        this.mapper.addMixIn(Vector2.class, Vector2Mixin.class);
+        this.mapper.addMixIn(Widget.class, WidgetMixin.class);
+        this.mapper.addMixIn(Button.class, ButtonMixin.class);
+        this.mapper.addMixIn(Label.class, LabelMixin.class);
+        this.mapper.addMixIn(Container.class, ContainerMixin.class);
     }
 
-    private List<Widget> construct(Path configPath, BiFunction<WidgetConfig, CommandLibrary, Widget> assembler,
-        CommandLibrary commandLibrary) throws IOException {
+    @Override
+    public Map<Integer, Widget> construct(Path configPath) throws IOException {
         try {
-            List<WidgetConfig> dtos = mapper.readValue(
-                srcPath.resolve(configPath).toFile(),
-                new TypeReference<List<WidgetConfig>>() {}
+            List<Widget> widgets = mapper.readValue(
+                srcPath.resolve(configPath.toString() + ".json").toFile(),
+                new TypeReference<List<Widget>>() {}
             );
 
-            return dtos.stream().
-                map(dto -> assembler.apply(dto, commandLibrary)).
-                toList();
+            Map<Integer, Widget> mappedWidgets = new HashMap<>();
+            for (Widget widget : widgets) {
+                mappedWidgets.put(widget.getId(), widget);
+            }
+
+            return mappedWidgets;
+
         } catch (IOException exception) {
             System.err.println("Could not read config file: " + exception.getMessage());
             throw new IOException(exception);
         }
-    }
-
-    private Widget assembleButton(WidgetConfig widgetConfig, CommandLibrary commandLibrary) {
-        return Widget.createButton(
-            counter.getAndIncrement(),
-            widgetConfig.shape(),
-            widgetConfig.shapeColor(),
-            widgetConfig.position(),
-            
-            commandLibrary.getCommand(widgetConfig.actionName())
-        );
-    }
-
-    @Override
-    public List<Widget> constructButtons(Path configPath, CommandLibrary commandLibrary) throws IOException {
-        return construct(configPath, this::assembleButton, commandLibrary);
-    }
-
-    private Widget assembleLabel(WidgetConfig widgetConfig, CommandLibrary commandLibrary) {
-        return Widget.createLabel(
-            widgetConfig.shape(),
-            widgetConfig.shapeColor(),
-            widgetConfig.text(),
-            widgetConfig.textColor(),
-            widgetConfig.position()
-        );
-    }
-
-    @Override
-    public List<Widget> constructLabels(Path configPath) throws IOException {
-        return construct(configPath, this::assembleLabel, null);
     }
 }
