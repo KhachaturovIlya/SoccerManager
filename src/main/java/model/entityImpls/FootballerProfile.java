@@ -17,7 +17,7 @@ public class FootballerProfile implements IFootballerProfile {
     private short _age;
     private int _transfer_cost;
 
-    private boolean _injured = false;
+    private boolean _injured;
     private short _daysToHeal;
 
 

@@ -35,7 +35,8 @@ public enum FootballerCharacteristicsEnum {
     CROSS_INTERCEPTION(23, "cross interception");
 
     public final int array_pos;
-    public final String string_version;
+    private final String string_version;
+
     public static final short cnt = 24;
     FootballerCharacteristicsEnum(int pos, String stringVersion) {
         array_pos = pos;

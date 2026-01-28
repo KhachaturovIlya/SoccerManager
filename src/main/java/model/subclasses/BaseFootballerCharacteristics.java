@@ -1,6 +1,8 @@
 package model.subclasses;
 
 
+import com.fasterxml.jackson.annotation.JsonSetter;
+
 public class BaseFootballerCharacteristics {
     private short[] _characteristics;
 
@@ -12,6 +14,7 @@ public class BaseFootballerCharacteristics {
         return _characteristics[characteristic.array_pos];
     }
 
+	@JsonSetter
     public void increaseCharacteristic(FootballerCharacteristicsEnum characteristic, short add) {
         _characteristics[characteristic.array_pos] += add;
     }
