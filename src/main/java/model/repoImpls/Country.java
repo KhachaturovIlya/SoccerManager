@@ -4,16 +4,21 @@ import model.repoInterfaces.ICountry;
 import model.repoInterfaces.ILeague;
 import model.subclasses.Nationality;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Country implements ICountry {
 	private Nationality _country;
-	private List<ILeague> _leagues;
+	private List<ILeague> _leagues = new ArrayList<>();
 
 
 
 	public Country(Nationality country) {
 		_country = country;
+	}
+
+	public Country(String country) {
+		_country = Nationality.valueOf(country);
 	}
 
 	@Override
@@ -27,7 +32,7 @@ public class Country implements ICountry {
 	}
 
 	@Override
-	public ILeague divisionNumber(short number) {
+	public ILeague divisionByNumber(short number) {
 		return _leagues.get(number);
 	}
 
