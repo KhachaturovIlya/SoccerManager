@@ -9,9 +9,9 @@ public final class Button extends Widget {
     private final List<String> clickActions;
     private final List<String> actionContext;
 
-    public Button(boolean active, String name, Shape shape, Color shapeColor, TextConfig textConfig,
+    public Button(boolean active, String name, Shape shape, Color shapeColor, List<String> img, TextConfig textConfig,
                   Vector2 normalizedPosition, List<String> clickActions, List<String> actionContext) {
-        super(active, name, shape, shapeColor, textConfig, normalizedPosition);
+        super(active, name, shape, shapeColor, img, textConfig, normalizedPosition);
         this.clickActions = clickActions;
         this.actionContext = actionContext;
     }

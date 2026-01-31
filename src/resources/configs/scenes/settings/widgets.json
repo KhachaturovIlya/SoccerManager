@@ -7,6 +7,7 @@
     "shape": { "type": "rectangle", "width": 0.4, "height": 0.6 },
     "shapeColor": { "red": 25, "green": 30, "blue": 45, "alpha": 250 },
     "textConfig": { "id": "NO_TEXT", "type": "DEFAULT", "color": { "red": 0, "green": 0, "blue": 0, "alpha": 0 }, "bindings": [] },
+    "img" : [],
     "children": [
       {
         "type": "label",
@@ -20,7 +21,8 @@
           "type": "CAPTION",
           "color": { "red": 255, "green": 255, "blue": 255, "alpha": 255 },
           "bindings": []
-        }
+        },
+        "img" : []
       },
       {
         "type": "label",
@@ -34,7 +36,8 @@
           "type": "DEFAULT",
           "color": { "red": 150, "green": 160, "blue": 180, "alpha": 255 },
           "bindings": []
-        }
+        },
+        "img" : []
       },
       {
         "type": "button",
@@ -44,6 +47,7 @@
         "shape": { "type": "rectangle", "width": 0.08, "height": 0.08 },
         "shapeColor": { "red": 60, "green": 70, "blue": 90, "alpha": 255 },
         "textConfig": { "id": "-", "type": "DEFAULT", "color": { "red": 255, "green": 255, "blue": 255, "alpha": 255 }, "bindings": [] },
+        "img" : [],
         "clickActions": ["DECREASE_VOLUME"],
         "actionsContext": [""]
       },
@@ -60,17 +64,19 @@
           "sideMargin": 0.02
         },
         "textConfig": { "id": "NO_TEXT", "type": "DEFAULT", "color": { "red": 0, "green": 0, "blue": 0, "alpha": 0 }, "bindings": [] },
+        "img" : [],
         "template": {
           "type": "label",
           "active": true,
           "name": "VOL_STEP",
-          "shape": { "type": "rectangle", "width": 0.05, "height": 0.9 },
+          "shape": { "type": "rectangle", "width": 0.05, "height": 0.95 },
           "shapeColor": { "red": 0, "green": 200, "blue": 100, "alpha": 255 },
           "normalizedPosition": { "x": 0.0, "y": 0.0 },
           "textConfig": {
             "id": "NO_TEXT", "type": "DEFAULT", "color": { "red": 0, "green": 0, "blue": 0, "alpha": 0 },
             "bindings": []
-          }
+          },
+          "img" : []
         },
         "templatesInfo": { "query": "VOLUME_LEVEL", "subjectId": "" }
       },
@@ -82,6 +88,7 @@
         "shape": { "type": "rectangle", "width": 0.08, "height": 0.08 },
         "shapeColor": { "red": 60, "green": 70, "blue": 90, "alpha": 255 },
         "textConfig": { "id": "+", "type": "DEFAULT", "color": { "red": 255, "green": 255, "blue": 255, "alpha": 255 }, "bindings": [] },
+        "img" : [],
         "clickActions": ["INCREASE_VOLUME"],
         "actionsContext": [""]
       },
@@ -98,6 +105,7 @@
           "color": { "red": 255, "green": 255, "blue": 255, "alpha": 255 },
           "bindings": []
         },
+        "img" : [],
         "clickActions": ["TOGGLE_FS"],
         "actionsContext": [""]
       },
@@ -114,6 +122,7 @@
           "color": { "red": 255, "green": 255, "blue": 255, "alpha": 255 },
           "bindings": []
         },
+        "img" : [],
         "clickActions": ["LOAD_NEW_SCENE"],
         "actionsContext": ["MAIN_MENU"]
       }

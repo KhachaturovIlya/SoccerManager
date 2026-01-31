@@ -14,17 +14,20 @@ public sealed abstract class Widget permits Button, Label, Container {
     final protected Shape shape;
     final protected Color shapeColor;
 
+    final protected List<String> img;
+
     protected TextConfig textConfig;
 
     protected Vector2 normalizedPosition;
 
-    public Widget(boolean active, String name, Shape shape, Color shapeColor,
+    public Widget(boolean active, String name, Shape shape, Color shapeColor, List<String> img,
                   TextConfig textConfig, Vector2 normalizedPosition) {
         this.id = nextId++;
         this.name = name;
         this.active = active;
         this.shape = shape;
         this.shapeColor = shapeColor;
+        this.img = img;
         this.textConfig = textConfig;
         this.normalizedPosition = normalizedPosition;
     }
@@ -35,6 +38,7 @@ public sealed abstract class Widget permits Button, Label, Container {
         this.active = widget.active;
         this.shape = widget.shape;
         this.shapeColor = widget.shapeColor;
+        this.img = widget.img;
         this.textConfig = widget.textConfig;
         this.normalizedPosition = widget.normalizedPosition;
     }

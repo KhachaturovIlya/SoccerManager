@@ -57,6 +57,7 @@ public class JsonWidgetFactory implements IWidgetFileFactory {
             @JsonProperty("name") String name,
             @JsonProperty("shape") Shape shape,
             @JsonProperty("shapeColor") Color shapeColor,
+            @JsonProperty("img") List<String> img,
             @JsonProperty("textConfig") TextConfig textConfig,
             @JsonProperty("normalizedPosition") Vector2 normalizedPosition,
             @JsonProperty("children") List<Widget> children
@@ -70,6 +71,7 @@ public class JsonWidgetFactory implements IWidgetFileFactory {
             @JsonProperty("name") String name,
             @JsonProperty("shape") Shape shape,
             @JsonProperty("shapeColor") Color shapeColor,
+            @JsonProperty("img") List<String> img,
             @JsonProperty("textConfig") TextConfig textConfig,
             @JsonProperty("normalizedPosition") Vector2 normalizedPosition,
             @JsonProperty("layoutStrategy") ILayoutStrategy layoutStrategy,
@@ -112,6 +114,7 @@ public class JsonWidgetFactory implements IWidgetFileFactory {
             @JsonProperty("name") String name,
             @JsonProperty("shape") Shape shape,
             @JsonProperty("shapeColor") Color shapeColor,
+            @JsonProperty("img") List<String> img,
             @JsonProperty("textConfig") TextConfig textConfig,
             @JsonProperty("normalizedPosition") Vector2 normalizedPosition,
             @JsonProperty("clickActions") List<String> actions,
@@ -126,6 +129,7 @@ public class JsonWidgetFactory implements IWidgetFileFactory {
             @JsonProperty("name") String name,
             @JsonProperty("shape") Shape shape,
             @JsonProperty("shapeColor") Color shapeColor,
+            @JsonProperty("img") List<String> img,
             @JsonProperty("textConfig") TextConfig textConfig,
             @JsonProperty("normalizedPosition") Vector2 normalizedPosition
         ) {}

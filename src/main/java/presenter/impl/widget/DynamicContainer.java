@@ -14,14 +14,30 @@ public class DynamicContainer extends Container {
     private final Widget template;
     private final DataBinding templatesInfo;
 
-    DynamicContainer(boolean active, String name, Shape shape, Color shapeColor,
+    DynamicContainer(boolean active, String name, Shape shape, Color shapeColor, List<String> img,
                      TextConfig textConfig, Vector2 normalizedPosition, ILayoutStrategy layoutStrategy,
                      Widget template, DataBinding templatesInfo) {
 
-        super(active, name, shape, shapeColor, textConfig, normalizedPosition, new ArrayList<>());
+        super(active, name, shape, shapeColor, img, textConfig, normalizedPosition, new ArrayList<>());
         this.layoutStrategy = layoutStrategy;
         this.template = template;
         this.templatesInfo = templatesInfo;
+    }
+
+    public DynamicContainer(DynamicContainer container) {
+        super(container);
+        this.layoutStrategy = container.layoutStrategy;
+        this.template = container.template;
+        this.templatesInfo = container.templatesInfo;
+    }
+
+    @Override
+    public DynamicContainer wither(TextConfig textConfig) {
+        DynamicContainer container = new DynamicContainer(this);
+
+        container.textConfig = textConfig;
+
+        return container;
     }
 
     public DataBinding getTemplatesInfo() {

@@ -196,6 +196,10 @@ public class DefaultPresenter implements IPresenter {
     }
 
     public static Widget findWidgetByPath(Widget current, String nameId) {
+        if (current.getName().equals(nameId)) {
+            return current;
+        }
+
         if (current instanceof Container container) {
             return container.findChild(nameId);
         }
