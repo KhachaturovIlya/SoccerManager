@@ -4,52 +4,52 @@ import model.entityInterfaces.IBall;
 import shared.Vector3;
 
 public class Ball implements IBall {
-    private Vector3 _speed = new Vector3(0, 0, 0);
-    private Vector3 _acceleration = new Vector3(0, 0, 0);
-    private  Vector3 _position;
+    private Vector3 speed = new Vector3(0, 0, 0);
+    private Vector3 acceleration = new Vector3(0, 0, 0);
+    private  Vector3 position;
 
     public Ball(Vector3 position) {
-        _position = position;
+        this.position = position;
     }
 
     @Override
     public void move(Vector3 shift) {
-        _position.addLocal(shift);
+        position.addLocal(shift);
     }
 
     @Override
     public Vector3 speed() {
-        return _speed;
+        return speed;
     }
 
     @Override
     public void setSpeed(Vector3 speed) {
-        _speed = speed;
+        this.speed = speed;
     }
 
     @Override
     public void increaseSpeed(Vector3 speedAdd) {
-        _speed.addLocal(speedAdd);
+        speed.addLocal(speedAdd);
     }
 
     @Override
     public void decreaseSpeed(Vector3 speedLoss) {
         speedLoss.mulLocal(-1.0);
-        _speed.addLocal(speedLoss);
+        speed.addLocal(speedLoss);
     }
 
     @Override
     public Vector3 acceleration() {
-        return _acceleration;
+        return acceleration;
     }
 
     @Override
     public void setAcceleration(Vector3 acceleration) {
-        _acceleration = acceleration;
+        this.acceleration = acceleration;
     }
 
     @Override
     public Vector3 position() {
-        return _position;
+        return position;
     }
 }

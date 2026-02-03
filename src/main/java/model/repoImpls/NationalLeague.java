@@ -1,57 +1,107 @@
 package model.repoImpls;
 
-import model.entityInterfaces.ITeam;
-import model.repoInterfaces.ILeague;
+import model.repoInterfaces.INationalLeague;
+import model.subclasses.IRegulations;
 import model.subclasses.LeagueRegulations;
+import model.subclasses.MatchNote;
 import model.subclasses.TournamentTableNote;
 
-import java.util.ArrayList;
-import java.util.Comparator;
+import java.security.InvalidParameterException;
+import java.util.*;
 
-public class NationalLeague implements ILeague {
-	private String _name;
-	private ArrayList<TournamentTableNote> _table;
-	private LeagueRegulations _regulations;
+public class NationalLeague implements INationalLeague {
+	private String name;
+	private ArrayList<TournamentTableNote> table;
+	private LeagueRegulations regulations;
+	private Map<String, List<MatchNote>> schedule;
+	private short currentTour = 1;
 
 
-	public NationalLeague(String name, LeagueRegulations regulations) {
-		_name = name;
-		_regulations = regulations;
-		_table = new ArrayList<>(_regulations.amountOfTeams());
+	public NationalLeague(String name, LeagueRegulations regulations) throws InvalidParameterException {
+		if (0 != regulations.amountOfTeams() % 2) {
+			throw new InvalidParameterException("amount of teams must be even (league '" + name + "')");
+		}
+		this.name = name;
+		this.regulations = regulations;
+		table = new ArrayList<>(this.regulations.amountOfTeams());
 	}
 
 	@Override
-	public ArrayList<TournamentTableNote> tournamentTable() {
-		return _table;
+	public List<TournamentTableNote> tournamentTable() {
+		return table;
 	}
 
 	@Override
-	public LeagueRegulations regulations() {
-		return null;
+	public IRegulations regulations() {
+		return regulations;
 	}
 
 	@Override
-	public void addTeam(ITeam team) {
-		if (_table.size() == _regulations.amountOfTeams()) {
+	public List<MatchNote> nextStageMatches() {
+		List<MatchNote> res = new ArrayList<>(regulations.amountOfTeams() / 2);
+		schedule.forEach((key, value) -> res.add(value.get(currentTour - 1)));
+		return res;
+	}
+
+	@Override
+	public List<MatchNote> allTeamMatches(String team) {
+		return schedule.get(team);
+	}
+
+	@Override
+	public void addTeam(String team) {
+		if (table.size() == regulations.amountOfTeams()) {
 			throw new IndexOutOfBoundsException("league is already full");
 		}
 
-		_table.add(new TournamentTableNote(team));
+		table.add(new TournamentTableNote(team));
 	}
 
 	@Override
-	public void removeTeam(String teamName) {
-		_table.removeIf(t -> t.team().name().equals(teamName));
+	public void removeTeam(String team) {
+		table.removeIf(t -> t.team().equals(team));
+	}
+
+	@Override
+	public void setSchedule(Map<String, List<MatchNote>> schedule) {
+		this.schedule = schedule;
+	}
+
+	@Override
+	public short currentTour() {
+		return currentTour;
+	}
+
+	@Override
+	public void increaseTour() {
+		currentTour += 1;
 	}
 
 	@Override
 	public void resetResults() {
-		_table.forEach(t -> t.reset());
-		_table.sort(Comparator.comparing(TournamentTableNote::teamName));
+		table.forEach(t -> t.reset());
+		table.sort(Comparator.comparing(TournamentTableNote::team));
+	}
+
+	@Override
+	public void replaceTeam(String oldTeam, String newTeam) {
+		if (!schedule.isEmpty()) {
+			throw new IllegalStateException("tournament has been already started (league - '" + name + "', replaceTeam)");
+		}
+		int index = table.indexOf(oldTeam);
+		table.set(index, new TournamentTableNote(newTeam));
+		table.sort(Comparator.comparing(TournamentTableNote::team));
+	}
+
+	@Override
+	public List<String> teams() {
+		List<String> res = new ArrayList<>(regulations.amountOfTeams());
+		table.forEach(note -> res.add(note.team()));
+		return res;
 	}
 
 	@Override
 	public String name() {
-		return _name;
+		return name;
 	}
 }
