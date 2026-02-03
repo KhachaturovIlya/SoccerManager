@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 public class BaseFootballerCharacteristics {
-    private List<Short> _characteristics = new ArrayList<>();
+    private List<Short> _characteristics = new ArrayList<>(FootballerCharacteristicsEnum.cnt);
 
 	private boolean isCharacteristicValid(short characteristic) {
 		return 0 >= characteristic && characteristic <= 100;
@@ -20,8 +20,7 @@ public class BaseFootballerCharacteristics {
 		_characteristics = characteristics;
 	}
 
-	@JsonCreator
-	public BaseFootballerCharacteristics(@JsonProperty("characteristics")Map<String, Short> characteristics)
+	public BaseFootballerCharacteristics(Map<String, Short> characteristics)
 	throws InvalidParameterException {
 		characteristics.forEach((key, value) -> {
 			if (!isCharacteristicValid(value)) {

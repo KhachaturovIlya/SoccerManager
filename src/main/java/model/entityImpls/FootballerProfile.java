@@ -1,7 +1,5 @@
 package model.entityImpls;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import model.subclasses.BaseFootballerCharacteristics;
 import model.subclasses.Nationality;
 import model.subclasses.Role;
@@ -13,177 +11,173 @@ import java.time.LocalDate;
 import java.util.List;
 
 public class FootballerProfile implements IFootballerProfile {
-    private final String _name;
-    private final Nationality _nationality;
-    private List<Role> _preferedRoles;
-    private short _number;
-    private final LocalDate _dateOfBirth;
-    private int _transferCost;
+    private final String name;
+    private final Nationality nationality;
+    private List<Role> preferedRoles;
+    private short number;
+    private final LocalDate dateOfBirth;
+    private int transferCost;
 
-    private boolean _injured;
-    private short _daysToHeal;
+    private boolean injured;
+    private short daysToHeal;
 
-    private double _currentPhysicalForm = 1.0;
-    private double _currentEmotionalState = 1.0;
+    private double currentPhysicalForm = 1.0;
+    private double currentEmotionalState = 1.0;
 
-    private BaseFootballerCharacteristics _characteristics;
+    private BaseFootballerCharacteristics characteristics;
 
 	private boolean isTransferCostValid(int transferCost) {
 		return  0 <= transferCost;
 	}
 
 
-	@JsonCreator
-    public FootballerProfile(@JsonProperty("name")String name, @JsonProperty("nationality")Nationality nationality,
-	@JsonProperty("prefered roles")List<Role> preferedRoles, @JsonProperty("date of birth")LocalDate dateOfBirth,
-	@JsonProperty("number")short number, @JsonProperty("transfer cost")int transferCost,
-	@JsonProperty("characteristics")BaseFootballerCharacteristics characteristics)
-	throws InvalidParameterException {
+    public FootballerProfile(String name, Nationality nationality, List<Role> preferedRoles, LocalDate dateOfBirth,
+	short number, int transferCost,	BaseFootballerCharacteristics characteristics) throws InvalidParameterException {
 		if (!isTransferCostValid(transferCost)) {
 			throw new InvalidParameterException("invalid number: " + number);
 		}
-        _name = name;
-        _nationality = nationality;
-        _preferedRoles = preferedRoles;
-		_dateOfBirth = dateOfBirth;
-        _number = number;
-		_transferCost = transferCost;
-        _characteristics = characteristics;
+        this.name = name;
+        this.nationality = nationality;
+        this.preferedRoles = preferedRoles;
+		this.dateOfBirth = dateOfBirth;
+        this.number = number;
+		this.transferCost = transferCost;
+        this.characteristics = characteristics;
     }
 
     @Override
     public short number() {
-        return _number;
+        return number;
     }
 
     @Override
     public void setNumber(short number) {
-        _number = number;
+        this.number = number;
     }
 
     @Override
     public List<Role> preferedRoles() {
-        return _preferedRoles;
+        return preferedRoles;
     }
 
     @Override
     public void addRole(Role role) {
-        _preferedRoles.add(role);
+        preferedRoles.add(role);
     }
 
     @Override
     public int transferCost() {
-        return _transferCost;
+        return transferCost;
     }
 
     @Override
     public void setTransferCost(int cost) {
-        _transferCost = cost;
+        transferCost = cost;
     }
 
     @Override
     public void increaseTransferCost(int costAdd) {
-        _transferCost += costAdd;
+        transferCost += costAdd;
     }
 
     @Override
     public void decreaseTransferCost(int costLoss) {
-        _transferCost -= costLoss;
+        transferCost -= costLoss;
     }
 
     @Override
     public short characteristic(FootballerCharacteristicsEnum characteristic) {
-        return _characteristics.characteristic(characteristic);
+        return characteristics.characteristic(characteristic);
     }
 
     @Override
     public BaseFootballerCharacteristics allCharacteristics() {
-        return _characteristics;
+        return characteristics;
     }
 
     @Override
     public void increaseCharacteristci(FootballerCharacteristicsEnum characteristic, short add) {
-        _characteristics.increaseCharacteristic(characteristic, add);
+        characteristics.increaseCharacteristic(characteristic, add);
     }
 
     @Override
     public void decreaseCharacteristci(FootballerCharacteristicsEnum characteristic, short loss) {
-        _characteristics.decreaseCharacteristic(characteristic, loss);
+        characteristics.decreaseCharacteristic(characteristic, loss);
     }
 
     @Override
     public boolean injured() {
-        return _injured;
+        return injured;
     }
 
     @Override
     public void setInjury(short daysToHeal) {
-        _injured = true;
-        _daysToHeal = daysToHeal;
+        injured = true;
+        this.daysToHeal = daysToHeal;
     }
 
     @Override
     public short daysToHeal() {
-        return _daysToHeal;
+        return daysToHeal;
     }
 
     @Override
     public void updateInjury() {
-        _daysToHeal -= 1;
+        daysToHeal -= 1;
     }
 
     @Override
     public double currentPhysicalForm() {
-        return _currentPhysicalForm;
+        return currentPhysicalForm;
     }
 
     @Override
     public void increasePhysicalForm(double add) {
-        _currentPhysicalForm += Math.min(1.0 - _currentPhysicalForm, add);
+        currentPhysicalForm += Math.min(1.0 - currentPhysicalForm, add);
     }
 
     @Override
     public void decreasePhysicalForm(double loss) {
-        _currentPhysicalForm -= Math.min(_currentPhysicalForm, loss);
+        currentPhysicalForm -= Math.min(currentPhysicalForm, loss);
     }
 
     @Override
     public void setPhysicalForm(double physicalForm) {
-        _currentPhysicalForm = physicalForm;
+        currentPhysicalForm = physicalForm;
     }
 
     @Override
     public double currentEmotionalState() {
-        return _currentEmotionalState;
+        return currentEmotionalState;
     }
 
     @Override
     public void increaseEmotionalState(double add) {
-        _currentEmotionalState += Math.min(1.0 - _currentEmotionalState, add);
+        currentEmotionalState += Math.min(1.0 - currentEmotionalState, add);
     }
 
     @Override
     public void decreaseEmotionalState(double loss) {
-        _currentEmotionalState -= Math.min(_currentEmotionalState, loss);
+        currentEmotionalState -= Math.min(currentEmotionalState, loss);
     }
 
     @Override
     public void setEmotionalState(double emotionalState) {
-        _currentEmotionalState = emotionalState;
+        currentEmotionalState = emotionalState;
     }
 
 	@Override
 	public LocalDate dateOfBirth() {
-		return _dateOfBirth;
+		return dateOfBirth;
 	}
 
     @Override
     public String name() {
-        return _name;
+        return name;
     }
 
     @Override
     public Nationality nationality() {
-        return _nationality;
+        return nationality;
     }
 }

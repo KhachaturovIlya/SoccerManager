@@ -1,7 +1,5 @@
 package model.entityImpls;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import model.entityInterfaces.*;
 import model.subclasses.Stadium;
 
@@ -10,19 +8,19 @@ import java.util.*;
 
 public class Club implements ITeam {
 	private static final short AMOUNT_OF_NUMBERS = 99;
-	private String _name;
-	private Stadium _homeStadium;
-    private ICoach _headCoach;
-	private List<ISquad> _defaultSquads;
-    private List<IFootballerProfile> _players;
-    private int _transferBudget;
-	private ArrayList<Boolean> _isNumbervalid;
+	private String name;
+	private Stadium homeStadium;
+    private ICoach headCoach;
+	private List<ISquad> defaultSquads;
+    private List<IFootballerProfile> players;
+    private int transferBudget;
+	private ArrayList<Boolean> isNumbervalid;
 
 	private boolean isNumberValid(short number) {
 		if (0 >= number || 100 <= number) {
 			return false;
 		}
-		return _isNumbervalid.get(number - 1);
+		return isNumbervalid.get(number - 1);
 	}
 
 	private List<Short> invalidNumbers(List<IFootballerProfile> players) {
@@ -38,29 +36,26 @@ public class Club implements ITeam {
 	}
 
 
-	@JsonCreator
-    public Club(@JsonProperty("name")String name, @JsonProperty("home stadium")Stadium homeStadium,
-	@JsonProperty("head coach")ICoach headCoach, @JsonProperty("players")List<IFootballerProfile> players,
-	@JsonProperty("transfer budget")int transferBudget)
+    public Club(String name, Stadium homeStadium, ICoach headCoach, List<IFootballerProfile> players, int transferBudget)
 	throws InvalidParameterException {
 		List<Short> invalidNumbers = invalidNumbers(players);
 		if (!invalidNumbers.isEmpty()) {
 			throw new InvalidParameterException("invalid numbers in team '" + name + "': " + invalidNumbers);
 		}
-		_isNumbervalid = new ArrayList<>(Collections.nCopies(AMOUNT_OF_NUMBERS, true));
-        _name = name;
-		_homeStadium = homeStadium;
-		_headCoach = headCoach;
-		_players = players;
-        _transferBudget = transferBudget;
-		_players.forEach(p -> {
-			_isNumbervalid.set(p.number(), false);
+		isNumbervalid = new ArrayList<>(Collections.nCopies(AMOUNT_OF_NUMBERS, true));
+        this.name = name;
+		this.homeStadium = homeStadium;
+		this.headCoach = headCoach;
+		this.players = players;
+        this.transferBudget = transferBudget;
+		this.players.forEach(p -> {
+			isNumbervalid.set(p.number(), false);
 		});
     }
 
     @Override
     public String name() {
-        return _name;
+        return name;
     }
 
     @Override
@@ -68,48 +63,48 @@ public class Club implements ITeam {
 		if (!isNumberValid(player.number())) {
 			throw new InvalidParameterException("invalid number: " + player.number());
 		}
-        _players.add(player);
+        players.add(player);
     }
 
     @Override
     public void setHeadCoach(ICoach coach) {
-        _headCoach = coach;
+        headCoach = coach;
     }
 
 	@Override
 	public List<ISquad> defaultSqauds() {
-		return _defaultSquads;
+		return defaultSquads;
 	}
 
 	@Override
 	public void addDefaultSquad(ISquad squad) {
-		_defaultSquads.add(squad);
+		defaultSquads.add(squad);
 	}
 
 	@Override
     public List<IFootballerProfile> allPlayers() {
-        return _players;
+        return players;
     }
 
     @Override
     public Optional<IFootballerProfile> findPlayerByNumber(short number) {
-        return _players.stream().filter(p -> p.number() == number).findAny();
+        return players.stream().filter(p -> p.number() == number).findAny();
     }
 
 	@Override
 	public Stadium homeStadion() {
-		return _homeStadium;
+		return homeStadium;
 	}
 
 	public void increaseTransferBudget(int add) {
-		_transferBudget += add;
+		transferBudget += add;
 	}
 
 	public void decreaseTransferBudget(int loss) {
-		_transferBudget -= Math.min(loss, _transferBudget);
+		transferBudget -= Math.min(loss, transferBudget);
 	}
 
 	public int transferBudget() {
-		return _transferBudget;
+		return transferBudget;
 	}
 }

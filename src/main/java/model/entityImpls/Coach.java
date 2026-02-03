@@ -12,8 +12,7 @@ public class Coach implements ICoach {
     private Nationality _nationality;
     private LocalDate _dateOfBirth;
 
-	@JsonCreator
-    public Coach(String name, Nationality nationality, @JsonProperty("date of birth")LocalDate dateOfBirth) {
+    public Coach(String name, Nationality nationality, LocalDate dateOfBirth) {
         _name = name;
         _nationality = nationality;
         _dateOfBirth = dateOfBirth;
