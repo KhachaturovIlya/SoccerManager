@@ -6,21 +6,44 @@ import shared.*;
 import java.util.List;
 
 public final class Button extends Widget {
-    private final List<String> clickActions;
-    private final List<String> actionContext;
 
-    public Button(boolean active, String name, Shape shape, Color shapeColor, TextConfig textConfig,
-                  Vector2 normalizedPosition, List<String> clickActions, List<String> actionContext) {
-        super(active, name, shape, shapeColor, textConfig, normalizedPosition);
+    private List<DataBinding> clickActions;
+
+    public Button(boolean active, String name, Shape shape, Color shapeColor, List<String> img, TextConfig textConfig,
+                  Vector2 normalizedPosition, List<DataBinding> clickActions) {
+        super(active, name, shape, shapeColor, img, textConfig, normalizedPosition);
         this.clickActions = clickActions;
-        this.actionContext = actionContext;
     }
 
-    public List<String> getClickActions() {
+    public Button(Button button) {
+        super(button);
+        this.clickActions = button.clickActions;
+    }
+
+    @Override
+    public Button wither(TextConfig textConfig) {
+        Button button = new Button(this);
+        button.textConfig = textConfig;
+        return button;
+    }
+
+    @Override
+    public Button clone() {
+        return new Button(this);
+    }
+
+    public Button wither(List<DataBinding> clickActions) {
+        Button button = new Button(this);
+        button.clickActions = clickActions;
+
+        return button;
+    }
+
+    public void setClickActions(List<DataBinding> clickActions) {
+        this.clickActions = clickActions;
+    }
+
+    public List<DataBinding> getClickActions() {
         return clickActions;
-    }
-
-    public List<String> getActionContext() {
-        return actionContext;
     }
 }

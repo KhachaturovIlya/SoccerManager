@@ -1,5 +1,6 @@
 package presenter.impl;
 
+import model.repoInterfaces.ITeamRepository;
 import presenter.ILangService;
 import presenter.IPresenter;
 import presenter.Scene;
@@ -19,6 +20,7 @@ public class DefaultPresenter implements IPresenter {
     private boolean cycleState = true;
 
     private final IView view;
+    private final ITeamRepository repository;
 
     private final Map<String, Map<Integer, Widget>> scenes;
     private Map<Integer, Widget> widgets = null;
@@ -56,7 +58,7 @@ public class DefaultPresenter implements IPresenter {
 
         for (DataBinding binding : textConfig.bindings()) {
             try {
-                String data = commandLibrary.getContextCommand(binding.query()).execute(binding.subjectId());
+                String data = commandLibrary.getContextCommand(binding.query()).execute(binding.subjectId()).getFirst();
                 context.add(data != null ? data : "???");
             } catch (Exception e) {
                 return template;
@@ -82,6 +84,16 @@ public class DefaultPresenter implements IPresenter {
             visualWidgetDTOs.add(toVisualDtoFlatten(widget, widgetGlobalNormalizedPosition,
                 parentWidth, parentHeight));
             if (widget instanceof Container container) {
+                if (container instanceof DynamicContainer dynamicContainer) {
+                    try {
+                        dynamicContainer.rebuild(commandLibrary.getContextCommand(dynamicContainer.getTemplatesInfo().query()).execute(
+                            dynamicContainer.getTemplatesInfo().subjectId()
+                        ));
+                    } catch (Exception e) {
+                        System.out.println("Exception while rebuilding template " + dynamicContainer.getTemplatesInfo().query());
+                    }
+                }
+
                 flattenContainerToVisualDto(container.getChildren(), visualWidgetDTOs,
                     widgetGlobalNormalizedPosition, widgetGlobalWidth, widgetGlobalHeight);
             }
@@ -186,6 +198,10 @@ public class DefaultPresenter implements IPresenter {
     }
 
     public static Widget findWidgetByPath(Widget current, String nameId) {
+        if (current.getName().equals(nameId)) {
+            return current;
+        }
+
         if (current instanceof Container container) {
             return container.findChild(nameId);
         }
@@ -194,9 +210,10 @@ public class DefaultPresenter implements IPresenter {
 
     private void handleWidgetAction(Widget widget) throws Exception {
         if (widget instanceof Button button) {
-            for (String command : button.getClickActions()) {
+            List<DataBinding> clickActions = button.getClickActions();
+            for (DataBinding binding : clickActions) {
                 try {
-                    commandLibrary.getCommand(command).execute(button.getActionContext());
+                    commandLibrary.getCommand(binding.query()).execute(binding.subjectId());
                 } catch (Exception e) {
                     System.err.println(e.getMessage());
                 }
@@ -250,8 +267,9 @@ public class DefaultPresenter implements IPresenter {
 
     // Public methods:
 
-    public DefaultPresenter(IView view, Map<String, Map<Integer, Widget>> scenes, ILangService langService) {
+    public DefaultPresenter(IView view, ITeamRepository teamRepository, Map<String, Map<Integer, Widget>> scenes, ILangService langService) {
         this.view = view;
+        this.repository = teamRepository;
 
         this.scenes = scenes;
 

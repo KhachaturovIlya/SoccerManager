@@ -18,6 +18,8 @@ public class DefaultView implements IView {
     private final JFrame frame;
     private final JPanel canvas;
 
+    private final ImgMapper imgMapper;
+
     private final SoundPlayer soundPlayer;
     private final MusicPlayer musicPlayer;
 
@@ -168,6 +170,8 @@ public class DefaultView implements IView {
         fontMapper = new FontMapper(resourcesPath.resolve("fonts"));
         soundPlayer = new SoundPlayer(resourcesPath.resolve("audio/effects"));
         musicPlayer = new MusicPlayer(resourcesPath.resolve("audio/soundtracks"));
+        ImgMapperFactory imgMapperFactory = new ImgMapperFactory(resourcesPath.resolve("img"));
+        imgMapper = imgMapperFactory.construct("imgMaps");
 
         initWindow();
     }

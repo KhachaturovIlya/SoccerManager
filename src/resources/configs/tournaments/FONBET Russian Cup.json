@@ -1,0 +1,15 @@
+{
+  "type": "default cup",
+  "name": "FONBET Russian Cup",
+  "regulations": {
+    "amount of teams": 256
+  },
+  "participants": [
+    "Spartak Nalchik",
+    "Enisey Krasnoyarsk",
+    "Dinamo Barnaul",
+    "FC Berloga",
+    "FC Durka",
+    "Zenit Verkhniy Novgorog"
+  ]
+}

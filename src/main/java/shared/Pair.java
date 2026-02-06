@@ -1,3 +1,11 @@
 package shared;
 
-public record Pair<Type>(Type first, Type second) {}
+public class Pair<T> {
+	public T x;
+	public T y;
+
+	public Pair(T x, T y) {
+		this.x = x;
+		this.y = y;
+	}
+}

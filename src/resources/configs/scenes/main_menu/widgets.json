@@ -12,6 +12,7 @@
       "color": { "red": 255, "green": 255, "blue": 255, "alpha": 20 },
       "bindings": []
     },
+    "img" : [],
     "children": [
       {
         "type": "button",
@@ -26,8 +27,13 @@
           "color": { "red": 255, "green": 255, "blue": 255, "alpha": 255 },
           "bindings": []
         },
-        "clickActions": ["OPEN_TACTICS"],
-        "actionsContext": [""]
+        "img" : [],
+        "clickActions" : [
+          {
+            "query": "OPEN_TACTICS",
+            "subjectId": ""
+          }
+        ]
       },
       {
         "type": "label",
@@ -41,7 +47,8 @@
           "type": "CAPTION",
           "color": { "red": 255, "green": 255, "blue": 255, "alpha": 255 },
           "bindings": []
-        }
+        },
+        "img" : []
       },
       {
         "type": "label",
@@ -55,7 +62,8 @@
           "type": "CAPTION",
           "color": { "red": 255, "green": 255, "blue": 255, "alpha": 255 },
           "bindings": []
-        }
+        },
+        "img" : []
       },
       {
         "type": "label",
@@ -69,7 +77,8 @@
           "type": "DEFAULT",
           "color": { "red": 100, "green": 100, "blue": 120, "alpha": 255 },
           "bindings": []
-        }
+        },
+        "img" : []
       },
       {
         "type": "label",
@@ -83,7 +92,8 @@
           "type": "CAPTION",
           "color": { "red": 220, "green": 50, "blue": 50, "alpha": 255 },
           "bindings": []
-        }
+        },
+        "img" : []
       }
     ]
   },
@@ -100,6 +110,7 @@
       "color": { "red": 255, "green": 255, "blue": 255, "alpha": 20 },
       "bindings": []
     },
+    "img" : [],
     "children": [
       {
         "type": "button",
@@ -114,8 +125,13 @@
           "color": { "red": 10, "green": 30, "blue": 10, "alpha": 255 },
           "bindings": []
         },
-        "clickActions": ["LOAD_NEW_SCENE"],
-        "actionsContext": ["GAME_FIELD"]
+        "img" : [],
+        "clickActions" : [
+          {
+            "query": "LOAD_NEW_SCENE",
+            "subjectId": "GAME_FIELD"
+          }
+        ]
       },
       {
         "type": "button",
@@ -130,8 +146,13 @@
           "color": { "red": 10, "green": 30, "blue": 10, "alpha": 255 },
           "bindings": []
         },
-        "clickActions": ["SHIFT_WIDGET_STATE"],
-        "actionsContext": ["MAIN_MATCH_BAR"]
+        "img" : [],
+        "clickActions" : [
+          {
+            "query": "SHIFT_WIDGET_STATE",
+            "subjectId": "MAIN_MATCH_BAR"
+          }
+        ]
       },
       {
         "type": "label",
@@ -145,7 +166,8 @@
           "type": "DEFAULT",
           "color": { "red": 130, "green": 140, "blue": 160, "alpha": 255 },
           "bindings": []
-        }
+        },
+        "img" : []
       },
       {
         "type": "label",
@@ -159,7 +181,8 @@
           "type": "DEFAULT",
           "color": { "red": 200, "green": 200, "blue": 200, "alpha": 255 },
           "bindings": []
-        }
+        },
+        "img" : []
       },
       {
         "type": "label",
@@ -173,7 +196,8 @@
           "type": "DEFAULT",
           "color": { "red": 0, "green": 230, "blue": 118, "alpha": 255 },
           "bindings": []
-        }
+        },
+        "img" : []
       },
       {
         "type": "button",
@@ -188,8 +212,13 @@
           "color": { "red": 255, "green": 255, "blue": 255, "alpha": 255 },
           "bindings": []
         },
-        "clickActions": ["LOAD_NEW_SCENE"],
-        "actionsContext": ["SETTINGS"]
+        "img" : [],
+        "clickActions" : [
+          {
+            "query": "LOAD_NEW_SCENE",
+            "subjectId": "SETTINGS"
+          }
+        ]
       },
       {
         "type": "button",
@@ -204,8 +233,13 @@
           "color": { "red": 255, "green": 255, "blue": 255, "alpha": 255 },
           "bindings": []
         },
-        "clickActions": ["EXIT"],
-        "actionsContext": [""]
+        "img" : [],
+        "clickActions" : [
+          {
+            "query": "EXIT",
+            "subjectId": ""
+          }
+        ]
       }
     ]
   },
@@ -222,6 +256,7 @@
       "color": { "red": 0, "green": 0, "blue": 0, "alpha": 0 },
       "bindings": []
     },
+    "img" : [],
     "children": [
       {
         "type": "label",
@@ -240,7 +275,8 @@
               "query": "TEAM_BUDGET"
             }
           ]
-        }
+        },
+        "img" : []
       }
     ]
   }

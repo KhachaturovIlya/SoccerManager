@@ -16,10 +16,10 @@ public class VerticalLayout implements ILayoutStrategy {
     }
 
     @Override
-    public void apply(List<Widget> widgets, double areaWidth, double areaHeight) {
+    public void apply(List<Widget> widgets) {
         double sumHeight = 0;
         for (Widget widget : widgets) {
-            if (sumHeight + widget.getShape().getHeight() <= areaHeight) {
+            if (sumHeight + widget.getShape().getHeight() <= 1) {
                 widget.setNormalizedPosition(new Vector2(sideMargin, sideMargin + sumHeight));
                 widget.enable();
 

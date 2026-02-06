@@ -9,11 +9,11 @@ import java.util.List;
 import java.util.Map;
 
 public non-sealed class Container extends Widget {
-    Map<Integer, Widget> children;
+    protected Map<Integer, Widget> children;
 
-    public Container(boolean active, String name, Shape shape, Color shapeColor,
+    public Container(boolean active, String name, Shape shape, Color shapeColor, List<String> img,
                      TextConfig textConfig, Vector2 normalizedPosition, List<Widget> children) {
-        super(active, name, shape, shapeColor, textConfig, normalizedPosition);
+        super(active, name, shape, shapeColor, img, textConfig, normalizedPosition);
 
         Map<Integer, Widget> map = new HashMap<>();
         for (Widget widget : children) {
@@ -21,6 +21,16 @@ public non-sealed class Container extends Widget {
         }
 
         this.children = map;
+    }
+
+    public Container(Container container) {
+        super(container);
+        this.children = container.children;
+    }
+
+    @Override
+    public Container clone() {
+        return new Container(this);
     }
 
     public Map<Integer, Widget> getChildren() {
@@ -50,6 +60,14 @@ public non-sealed class Container extends Widget {
             }
         }
         return current;
+    }
+
+    @Override
+    public Container wither(TextConfig textConfig) {
+        Container container = new Container(this);
+        container.textConfig = textConfig;
+
+        return container;
     }
 
     public Widget findChild(String stringId) {
