@@ -45,6 +45,17 @@ public class SwissCupDrawService implements IDrawService {
 		occupiedTeamIndexes.clear();
 	}
 
+	private List<String> winners(List<Pair<MatchNote>> matches) {
+		List<String> res = new ArrayList<>(matches.size());
+		matches.forEach(pair -> {
+			short goalsX = (short) (pair.x.score().x + pair.y.score().x);
+			short goalsY = (short) (pair.x.score().y + pair.y.score().y);
+			String winner = goalsX > goalsY ? pair.x.homeTeam() : pair.x.awayTeam();
+			res.add(winner);
+		});
+		return res;
+	}
+
 	private void holdLeagueDraw() {
 		regulations = (SwissSystemCupRegulations) cup.regulations();
 		potSize = regulations.amountOfTeams() / regulations.pots();
@@ -82,7 +93,7 @@ public class SwissCupDrawService implements IDrawService {
 	}
 
 	private void holdPlayOffDraw() {
-		List<String> indirectPlayOffWinners = new ArrayList<>(regulations.directPlayOffClubs());
+		//List<String> teams = winners();
 	}
 
 	@Override
