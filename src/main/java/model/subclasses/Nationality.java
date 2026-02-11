@@ -204,7 +204,7 @@ public enum Nationality {
     }
 
 	public static Nationality fromString(String value) {
-		for (Nationality n : Nationality.values()) {
+		for (Nationality n : values()) {
 			if (n.value.equals(value)) {
 				return n;
 			}

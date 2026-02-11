@@ -13,7 +13,7 @@ import java.util.*;
 
 public class SwissSystemCup implements ISwissSystemCup {
 	private final String name;
-	private ArrayList<TournamentTableNote> leagueTable;
+	private List<TournamentTableNote> leagueTable;
 	private short currentTour;
 	private List<Pair<MatchNote>> indirectPlayOffPairs;
 	private List<List<Pair<MatchNote>>> playOffPairs;
@@ -74,21 +74,21 @@ public class SwissSystemCup implements ISwissSystemCup {
 	public List<MatchNote> nextStageMatches() {
 		if (currentTour < regulations.leaguePhaseMatches()) {
 			List<MatchNote> res = new ArrayList<>(regulations.amountOfTeams() / 2);
-			leaguePhaseOpponents.forEach((key, value) -> res.add(value.get(currentTour)));
+			leaguePhaseOpponents.forEach((_, value) -> res.add(value.get(currentTour)));
 			return res;
 		}
 		if (regulations.leaguePhaseMatches() <= currentTour && regulations.leaguePhaseMatches() + 2 > currentTour) {
 			List<MatchNote> res = new ArrayList<>(regulations.indirectPlayOffClubs() / 2);
-			indirectPlayOffPairs.forEach(p -> {
-				res.add(p.x);
-				res.add(p.y);
+			indirectPlayOffPairs.forEach(pair -> {
+				MatchNote match = currentTour - regulations.leaguePhaseMatches() == 0 ? pair.x : pair.y;
+				res.add(match);
 			});
 			return res;
 		}
-		List<MatchNote> res = new ArrayList<>();
+		List<MatchNote> res = new ArrayList<>(playOffPairs.get(currentTour - regulations.leaguePhaseMatches() - 2).size());
 		playOffPairs.get(currentTour - regulations.leaguePhaseMatches() - 2).forEach(pair -> {
-			res.add(pair.x);
-			res.add(pair.y);
+			MatchNote match = currentTour - regulations.leaguePhaseMatches() % 2 == 0 ? pair.x : pair.y;
+			res.add(match);
 		});
 		return res;
 	}
@@ -119,7 +119,7 @@ public class SwissSystemCup implements ISwissSystemCup {
 	}
 
 	@Override
-	public ArrayList<TournamentTableNote> leaguePhaseTable() {
+	public List<TournamentTableNote> leaguePhaseTable() {
 		return leagueTable;
 	}
 
@@ -176,5 +176,30 @@ public class SwissSystemCup implements ISwissSystemCup {
 	@Override
 	public List<Pair<MatchNote>> currentStagePairs() {
 		return playOffPairs.get(currentTour - regulations.leaguePhaseMatches() - 2);
+	}
+
+	@Override
+	public List<MatchNote> currentStageMatches() {
+		if (currentTour < regulations.leaguePhaseMatches()) {
+			List<MatchNote> res = new ArrayList<>(regulations.amountOfTeams() / 2);
+			leaguePhaseOpponents.forEach((_, value) ->
+				res.add(value.get(currentTour)));
+			return res;
+		}
+		if (currentTour >= regulations.leaguePhaseMatches() && currentTour < regulations.leaguePhaseMatches() + 2) {
+			List<MatchNote> res = new ArrayList<>(regulations.indirectPlayOffClubs() / 2);
+			indirectPlayOffPairs.forEach(pair -> {
+				MatchNote match = currentTour - regulations.leaguePhaseMatches() == 0 ? pair.x : pair.y;
+				res.add(match);
+			});
+			return res;
+		}
+
+		List<MatchNote> res = new ArrayList<>(playOffPairs.get(currentTour - regulations.leaguePhaseMatches() - 2).size());
+		playOffPairs.get(currentTour - regulations.leaguePhaseMatches() - 2).forEach(pair -> {
+			MatchNote match = currentTour - regulations.leaguePhaseMatches() % 2 == 0 ? pair.x : pair.y;
+			res.add(match);
+		});
+		return res;
 	}
 }
