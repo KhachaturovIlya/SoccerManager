@@ -60,7 +60,7 @@ public class NationalLeague implements INationalLeague {
 
 	@Override
 	public void removeTeam(String team) {
-		tournamentTable.removeIf(t -> t.team().equals(team));
+		tournamentTable.removeIf(t -> t.getTeamName().equals(team));
 	}
 
 	@Override

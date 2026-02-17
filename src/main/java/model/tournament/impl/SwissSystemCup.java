@@ -28,20 +28,20 @@ public class SwissSystemCup implements ISwissSystemCup {
 
 	public SwissSystemCup(String name, SwissSystemCupRegulations regulations, List<String> teams) {
 		if (regulations.getAmountOfTeams() != teams.size() ||
-				regulations.directPlayOffClubs() + regulations.indirectPlayOffClubs() > regulations.getAmountOfTeams()) {
+				regulations.getDirectPlayOffClubs() + regulations.getIndirectPlayOffClubs() > regulations.getAmountOfTeams()) {
 			throw new InvalidParameterException(
 					"number of teams in regulations and in reality are different (cup '" + name + "')");
 		}
-		if (!IsPowerOfTwo.check(regulations.directPlayOffClubs() + regulations.indirectPlayOffClubs() / 2)) {
+		if (!IsPowerOfTwo.check(regulations.getDirectPlayOffClubs() + regulations.getIndirectPlayOffClubs() / 2)) {
 			throw new InvalidParameterException("amount of teams in cup must be power of 2 (cup '" + name + "')");
 		}
-		if (getRegulations().getAmountOfTeams() % regulations.pots() != 0) {
+		if (getRegulations().getAmountOfTeams() % regulations.getPots() != 0) {
 			throw new InvalidParameterException("amount of teams in cup must be multiple of amount of pots (cup '" + name + "')");
 		}
 		this.name = name;
 		this.regulations = regulations;
 		leaguePhaseTable = new ArrayList<>(this.regulations.getAmountOfTeams());
-		playOffPairs = new ArrayList<>((int) (Math.log(regulations.directPlayOffClubs()) / Math.log(2)));
+		playOffPairs = new ArrayList<>((int) (Math.log(regulations.getDirectPlayOffClubs()) / Math.log(2)));
 		teams.forEach(t -> leaguePhaseTable.add(new TournamentTableNote(t)));
 	}
 
@@ -72,22 +72,22 @@ public class SwissSystemCup implements ISwissSystemCup {
 
 	@Override
 	public List<MatchNote> nextStageMatches() {
-		if (currentTour < regulations.leaguePhaseMatches()) {
+		if (currentTour < regulations.getLeaguePhaseMatches()) {
 			List<MatchNote> res = new ArrayList<>(regulations.getAmountOfTeams() / 2);
 			leaguePhaseOpponents.forEach((_, value) -> res.add(value.get(currentTour)));
 			return res;
 		}
-		if (regulations.leaguePhaseMatches() <= currentTour && regulations.leaguePhaseMatches() + 2 > currentTour) {
-			List<MatchNote> res = new ArrayList<>(regulations.indirectPlayOffClubs() / 2);
+		if (regulations.getLeaguePhaseMatches() <= currentTour && regulations.getLeaguePhaseMatches() + 2 > currentTour) {
+			List<MatchNote> res = new ArrayList<>(regulations.getIndirectPlayOffClubs() / 2);
 			indirectPlayOffPairs.forEach(pair -> {
-				MatchNote match = currentTour - regulations.leaguePhaseMatches() == 0 ? pair.x : pair.y;
+				MatchNote match = currentTour - regulations.getLeaguePhaseMatches() == 0 ? pair.x : pair.y;
 				res.add(match);
 			});
 			return res;
 		}
-		List<MatchNote> res = new ArrayList<>(playOffPairs.get(currentTour - regulations.leaguePhaseMatches() - 2).size());
-		playOffPairs.get(currentTour - regulations.leaguePhaseMatches() - 2).forEach(pair -> {
-			MatchNote match = currentTour - regulations.leaguePhaseMatches() % 2 == 0 ? pair.x : pair.y;
+		List<MatchNote> res = new ArrayList<>(playOffPairs.get(currentTour - regulations.getLeaguePhaseMatches() - 2).size());
+		playOffPairs.get(currentTour - regulations.getLeaguePhaseMatches() - 2).forEach(pair -> {
+			MatchNote match = currentTour - regulations.getLeaguePhaseMatches() % 2 == 0 ? pair.x : pair.y;
 			res.add(match);
 		});
 		return res;
@@ -95,15 +95,15 @@ public class SwissSystemCup implements ISwissSystemCup {
 
 	@Override
 	public List<MatchNote> allTeamMatches(String team) {
-		if (currentTour < regulations.leaguePhaseMatches()) {
+		if (currentTour < regulations.getLeaguePhaseMatches()) {
 			return leaguePhaseOpponents.get(team);
 		}
 
 		List<Pair<MatchNote>> stage;
-		if (regulations.leaguePhaseMatches() <= currentTour && regulations.leaguePhaseMatches() + 2 > currentTour) {
+		if (regulations.getLeaguePhaseMatches() <= currentTour && regulations.getLeaguePhaseMatches() + 2 > currentTour) {
 			stage = indirectPlayOffPairs;
 		} else {
-			stage = playOffPairs.get(currentTour - regulations.leaguePhaseMatches() - 2);
+			stage = playOffPairs.get(currentTour - regulations.getLeaguePhaseMatches() - 2);
 		}
 
 		List<MatchNote> res = new ArrayList<>(2);
@@ -145,29 +145,29 @@ public class SwissSystemCup implements ISwissSystemCup {
 
 	@Override
 	public List<Pair<MatchNote>> currentStagePairs() {
-		return playOffPairs.get(currentTour - regulations.leaguePhaseMatches() - 2);
+		return playOffPairs.get(currentTour - regulations.getLeaguePhaseMatches() - 2);
 	}
 
 	@Override
 	public List<MatchNote> currentStageMatches() {
-		if (currentTour < regulations.leaguePhaseMatches()) {
+		if (currentTour < regulations.getLeaguePhaseMatches()) {
 			List<MatchNote> res = new ArrayList<>(regulations.getAmountOfTeams() / 2);
 			leaguePhaseOpponents.forEach((_, value) ->
 				res.add(value.get(currentTour)));
 			return res;
 		}
-		if (currentTour >= regulations.leaguePhaseMatches() && currentTour < regulations.leaguePhaseMatches() + 2) {
-			List<MatchNote> res = new ArrayList<>(regulations.indirectPlayOffClubs() / 2);
+		if (currentTour >= regulations.getLeaguePhaseMatches() && currentTour < regulations.getLeaguePhaseMatches() + 2) {
+			List<MatchNote> res = new ArrayList<>(regulations.getIndirectPlayOffClubs() / 2);
 			indirectPlayOffPairs.forEach(pair -> {
-				MatchNote match = currentTour - regulations.leaguePhaseMatches() == 0 ? pair.x : pair.y;
+				MatchNote match = currentTour - regulations.getLeaguePhaseMatches() == 0 ? pair.x : pair.y;
 				res.add(match);
 			});
 			return res;
 		}
 
-		List<MatchNote> res = new ArrayList<>(playOffPairs.get(currentTour - regulations.leaguePhaseMatches() - 2).size());
-		playOffPairs.get(currentTour - regulations.leaguePhaseMatches() - 2).forEach(pair -> {
-			MatchNote match = currentTour - regulations.leaguePhaseMatches() % 2 == 0 ? pair.x : pair.y;
+		List<MatchNote> res = new ArrayList<>(playOffPairs.get(currentTour - regulations.getLeaguePhaseMatches() - 2).size());
+		playOffPairs.get(currentTour - regulations.getLeaguePhaseMatches() - 2).forEach(pair -> {
+			MatchNote match = currentTour - regulations.getLeaguePhaseMatches() % 2 == 0 ? pair.x : pair.y;
 			res.add(match);
 		});
 		return res;
