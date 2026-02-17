@@ -45,14 +45,14 @@ public class SwissCupDrawService implements IDrawService {
 		occupiedTeamIndexes.clear();
 	}
 
-	private List<String> winners(List<Pair<MatchNote>> matches) {
+	private List<String> winners(List<MatchNote> matches) {
 		List<String> res = new ArrayList<>(matches.size());
-		matches.forEach(pair -> {
-			short goalsX = (short) (pair.x.score().x + pair.y.score().x);
-			short goalsY = (short) (pair.x.score().y + pair.y.score().y);
-			String winner = goalsX > goalsY ? pair.x.homeTeam() : pair.x.awayTeam();
+		for (int i = 0; i < matches.size() - 1; i += 2) {
+			short scoreX = (short) (matches.get(i).score().x + matches.get(i + 1).score().y);
+			short scoreY = (short) (matches.get(i).score().y + matches.get(i + 1).score().x);
+			String winner = scoreX > scoreY ? matches.get(i).homeTeam() : matches.get(i + 1).awayTeam();
 			res.add(winner);
-		});
+		}
 		return res;
 	}
 
@@ -93,7 +93,14 @@ public class SwissCupDrawService implements IDrawService {
 	}
 
 	private void holdPlayOffDraw() {
-		//List<String> teams = winners();
+		List<String> teams = winners(cup.currentStageMatches());
+		List<Pair<MatchNote>> nextStage =  new ArrayList<>(teams.size() / 2);
+		for (int i = 0; i < teams.size() - 1; i += 2) {
+			var firstMatch = new MatchNote(teams.get(i), teams.get(i + 1));
+			var secondMatch = new MatchNote(teams.get(i + 1), teams.get(i));
+			nextStage.add(new Pair<>(firstMatch, secondMatch));
+		}
+		cup.setNextStagePairs(nextStage);
 	}
 
 	@Override
