@@ -1,6 +1,7 @@
 package model.tournament.impl;
 
-import model.tournament.regulations.IRegulations;
+import lombok.Getter;
+import lombok.Setter;
 import model.tournament.regulations.impl.LeagueRegulations;
 import model.tournament.INationalLeague;
 
@@ -8,36 +9,31 @@ import java.security.InvalidParameterException;
 import java.util.*;
 
 public class NationalLeague implements INationalLeague {
-	private String name;
-	private ArrayList<TournamentTableNote> table;
+	@Getter
+	private final String name;
+	@Getter
+	private ArrayList<TournamentTableNote> tournamentTable;
+	@Getter
 	private LeagueRegulations regulations;
+	@Setter
 	private Map<String, List<MatchNote>> schedule;
-	private short currentTour = 1;
+	@Getter
+	private short currentTour;
 
 
 	public NationalLeague(String name, LeagueRegulations regulations) throws InvalidParameterException {
-		if (0 != regulations.amountOfTeams() % 2) {
+		if (0 != regulations.getAmountOfTeams() % 2) {
 			throw new InvalidParameterException("amount of teams must be even (league '" + name + "')");
 		}
 		this.name = name;
 		this.regulations = regulations;
-		table = new ArrayList<>(this.regulations.amountOfTeams());
-	}
-
-	@Override
-	public List<TournamentTableNote> tournamentTable() {
-		return table;
-	}
-
-	@Override
-	public IRegulations regulations() {
-		return regulations;
+		tournamentTable = new ArrayList<>(this.regulations.getAmountOfTeams());
 	}
 
 	@Override
 	public List<MatchNote> nextStageMatches() {
-		List<MatchNote> res = new ArrayList<>(regulations.amountOfTeams() / 2);
-		schedule.forEach((key, value) -> res.add(value.get(currentTour - 1)));
+		List<MatchNote> res = new ArrayList<>(regulations.getAmountOfTeams() / 2);
+		schedule.forEach((_, value) -> res.add(value.get(currentTour)));
 		return res;
 	}
 
@@ -47,27 +43,24 @@ public class NationalLeague implements INationalLeague {
 	}
 
 	@Override
+	public List<MatchNote> currentStageMatches() {
+		List<MatchNote> res = new ArrayList<>(regulations.getAmountOfTeams() / 2);
+		schedule.forEach((_, value) -> res.add(value.get(currentTour - 1)));
+		return res;
+	}
+
+	@Override
 	public void addTeam(String team) {
-		if (table.size() == regulations.amountOfTeams()) {
+		if (tournamentTable.size() == regulations.getAmountOfTeams()) {
 			throw new IndexOutOfBoundsException("league is already full");
 		}
 
-		table.add(new TournamentTableNote(team));
+		tournamentTable.add(new TournamentTableNote(team));
 	}
 
 	@Override
 	public void removeTeam(String team) {
-		table.removeIf(t -> t.team().equals(team));
-	}
-
-	@Override
-	public void setSchedule(Map<String, List<MatchNote>> schedule) {
-		this.schedule = schedule;
-	}
-
-	@Override
-	public short currentTour() {
-		return currentTour;
+		tournamentTable.removeIf(t -> t.team().equals(team));
 	}
 
 	@Override
@@ -77,8 +70,8 @@ public class NationalLeague implements INationalLeague {
 
 	@Override
 	public void resetResults() {
-		table.forEach(t -> t.reset());
-		table.sort(Comparator.comparing(TournamentTableNote::team));
+		tournamentTable.forEach(t -> t.reset());
+		tournamentTable.sort(Comparator.comparing(TournamentTableNote::getTeamName));
 	}
 
 	@Override
@@ -86,20 +79,15 @@ public class NationalLeague implements INationalLeague {
 		if (!schedule.isEmpty()) {
 			throw new IllegalStateException("tournament has been already started (league - '" + name + "', replaceTeam)");
 		}
-		int index = table.indexOf(oldTeam);
-		table.set(index, new TournamentTableNote(newTeam));
-		table.sort(Comparator.comparing(TournamentTableNote::team));
+		int index = tournamentTable.indexOf(oldTeam);
+		tournamentTable.set(index, new TournamentTableNote(newTeam));
+		tournamentTable.sort(Comparator.comparing(TournamentTableNote::getTeamName));
 	}
 
 	@Override
-	public List<String> teams() {
-		List<String> res = new ArrayList<>(regulations.amountOfTeams());
-		table.forEach(note -> res.add(note.team()));
+	public List<String> getTeams() {
+		List<String> res = new ArrayList<>(regulations.getAmountOfTeams());
+		tournamentTable.forEach(note -> res.add(note.getTeamName()));
 		return res;
-	}
-
-	@Override
-	public String getName() {
-		return name;
 	}
 }

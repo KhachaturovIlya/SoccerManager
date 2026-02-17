@@ -57,8 +57,8 @@ public class SwissCupDrawService implements IDrawService {
 	}
 
 	private void holdLeagueDraw() {
-		regulations = (SwissSystemCupRegulations) cup.regulations();
-		potSize = regulations.amountOfTeams() / regulations.pots();
+		regulations = (SwissSystemCupRegulations) cup.getRegulations();
+		potSize = regulations.getAmountOfTeams() / regulations.pots();
 		opponentsFromEachPot = regulations.leaguePhaseMatches() / regulations.pots();
 		leaguePhaseOpponents = new TreeMap<>();
 		occupiedTeamIndexes = new HashSet<>(regulations.leaguePhaseMatches());
@@ -106,11 +106,11 @@ public class SwissCupDrawService implements IDrawService {
 	@Override
 	public void holdADraw(ITournament tournament) {
 		cup = (ISwissSystemCup) tournament;
-		teams = cup.teams();
+		teams = cup.getTeams();
 
-		if (1 == cup.currentTour()) {
+		if (1 == cup.getCurrentTour()) {
 			holdLeagueDraw();
-		} else if (regulations.leaguePhaseMatches() + 1 == cup.currentTour()) {
+		} else if (regulations.leaguePhaseMatches() + 1 == cup.getCurrentTour()) {
 			holdIndirectPlayOffDraw();
 		} else {
 			holdPlayOffDraw();

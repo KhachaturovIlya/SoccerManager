@@ -1,22 +1,22 @@
 package model.tournament.impl;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 import shared.Pair;
 
 import java.security.InvalidParameterException;
 import java.time.LocalDate;
 
+@AllArgsConstructor
 public class MatchNote {
 	private String homeTeam;
 	private String awayTeam;
 	private short goalsTeamX;
 	private short goalsTeamY;
+	@Getter @Setter
 	private LocalDate date;
 
-	public MatchNote(String homeTeam, String awayTeam, LocalDate date) {
-		this.homeTeam = homeTeam;
-		this.awayTeam = awayTeam;
-		this.date = date;
-	}
 
 	public MatchNote(String homeTeam, String awayTeam) {
 		this.homeTeam = homeTeam;
@@ -41,14 +41,6 @@ public class MatchNote {
 
 	public String awayTeam() {
 		return awayTeam;
-	}
-
-	public void changeDate(LocalDate newDate) {
-		date = newDate;
-	}
-
-	public LocalDate date() {
-		return date;
 	}
 
 	public boolean containsTeam(String team) {

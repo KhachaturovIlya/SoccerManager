@@ -46,11 +46,11 @@ public class LeagueDrawService implements IDrawService {
 
 	@Override
 	public void holdADraw(ITournament tournament) {
-		teams = tournament.teams();
+		teams = tournament.getTeams();
 		occupiedTeamsIndexes = new HashSet<>(teamCnt);
 		schedule = new TreeMap<>();
 		teamCnt = teams.size();
-		tourCnt = (tournament.regulations().amountOfTeams() - 1) << 1;
+		tourCnt = (tournament.getRegulations().getAmountOfTeams() - 1) << 1;
 
 		teams.forEach(team ->
 			schedule.put(team, new ArrayList<>(Collections.nCopies(tourCnt, null))));

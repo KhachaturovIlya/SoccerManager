@@ -1,8 +1,11 @@
 package model.tournament.regulations.impl;
 
-
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import model.tournament.regulations.IRegulations;
 
+@Getter
+@AllArgsConstructor
 public class SwissSystemCupRegulations implements IRegulations {
 	private short leaguePhaseMembers;
 	private short leaguePhaseMatches;
@@ -10,39 +13,12 @@ public class SwissSystemCupRegulations implements IRegulations {
 	private short directPlayOffClubs;
 	private short indirectPlayOffClubs;
 
-
-
-	public SwissSystemCupRegulations(short leaguePhaseMembers, short leaguePhaseMatches, short pots,
-	short directPlayOffClubs, short indirectPlayOffClubs) {
-		this.leaguePhaseMembers = leaguePhaseMembers;
-		this.leaguePhaseMatches = leaguePhaseMatches;
-		this.pots = pots;
-		this.directPlayOffClubs = directPlayOffClubs;
-		this.indirectPlayOffClubs = indirectPlayOffClubs;
+	public short playOfParticipantsNumber() {
+		return (short) (directPlayOffClubs + indirectPlayOffClubs / 2);
 	}
 
 	@Override
-	public short amountOfTeams() {
+	public short getAmountOfTeams() {
 		return leaguePhaseMembers;
-	}
-
-	public short leaguePhaseMatches() {
-		return leaguePhaseMatches;
-	}
-
-	public short pots() {
-		return pots;
-	}
-
-	public short directPlayOffClubs() {
-		return directPlayOffClubs;
-	}
-
-	public short indirectPlayOffClubs() {
-		return indirectPlayOffClubs;
-	}
-
-	public short playOfParticipantsNumber() {
-		return (short) (directPlayOffClubs + indirectPlayOffClubs / 2);
 	}
 }

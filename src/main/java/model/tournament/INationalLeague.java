@@ -10,7 +10,7 @@ public interface INationalLeague extends ITournament {
 	void addTeam(String team);
 	void removeTeam(String team);
 	void setSchedule(Map<String, List<MatchNote>> schedule);
-	short currentTour();
+	short getCurrentTour();
 	void increaseTour();
-	List<TournamentTableNote> tournamentTable();
+	List<TournamentTableNote> getTournamentTable();
 }

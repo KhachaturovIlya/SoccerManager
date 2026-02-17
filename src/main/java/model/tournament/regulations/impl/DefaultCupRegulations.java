@@ -1,19 +1,10 @@
 package model.tournament.regulations.impl;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import model.tournament.regulations.IRegulations;
 
+@AllArgsConstructor
 public class DefaultCupRegulations implements IRegulations {
-	private short _amountOfTeams;
-
-	@JsonCreator
-	public DefaultCupRegulations(@JsonProperty("amount of teams")short amountOfTeams) {
-		_amountOfTeams = amountOfTeams;
-	}
-
-	@Override
-	public short amountOfTeams() {
-		return _amountOfTeams;
-	}
+	@Getter private short amountOfTeams;
 }

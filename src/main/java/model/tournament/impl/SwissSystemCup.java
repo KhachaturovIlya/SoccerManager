@@ -1,6 +1,7 @@
 package model.tournament.impl;
 
-import model.tournament.regulations.IRegulations;
+import lombok.Getter;
+import lombok.Setter;
 import model.tournament.regulations.impl.SwissSystemCupRegulations;
 import model.tournament.ISwissSystemCup;
 import shared.IsPowerOfTwo;
@@ -10,37 +11,43 @@ import java.security.InvalidParameterException;
 import java.util.*;
 
 public class SwissSystemCup implements ISwissSystemCup {
+	@Getter
 	private final String name;
-	private List<TournamentTableNote> leagueTable;
+	@Getter
+	private List<TournamentTableNote> leaguePhaseTable;
+	@Getter
 	private short currentTour;
+	@Getter @Setter
 	private List<Pair<MatchNote>> indirectPlayOffPairs;
 	private List<List<Pair<MatchNote>>> playOffPairs;
+	@Setter
 	private Map<String, List<MatchNote>> leaguePhaseOpponents;
+	@Getter
 	private SwissSystemCupRegulations regulations;
 
 
 	public SwissSystemCup(String name, SwissSystemCupRegulations regulations, List<String> teams) {
-		if (regulations.amountOfTeams() != teams.size() ||
-				regulations.directPlayOffClubs() + regulations.indirectPlayOffClubs() > regulations.amountOfTeams()) {
+		if (regulations.getAmountOfTeams() != teams.size() ||
+				regulations.directPlayOffClubs() + regulations.indirectPlayOffClubs() > regulations.getAmountOfTeams()) {
 			throw new InvalidParameterException(
 					"number of teams in regulations and in reality are different (cup '" + name + "')");
 		}
 		if (!IsPowerOfTwo.check(regulations.directPlayOffClubs() + regulations.indirectPlayOffClubs() / 2)) {
 			throw new InvalidParameterException("amount of teams in cup must be power of 2 (cup '" + name + "')");
 		}
-		if (regulations().amountOfTeams() % regulations.pots() != 0) {
+		if (getRegulations().getAmountOfTeams() % regulations.pots() != 0) {
 			throw new InvalidParameterException("amount of teams in cup must be multiple of amount of pots (cup '" + name + "')");
 		}
 		this.name = name;
 		this.regulations = regulations;
-		leagueTable = new ArrayList<>(this.regulations.amountOfTeams());
+		leaguePhaseTable = new ArrayList<>(this.regulations.getAmountOfTeams());
 		playOffPairs = new ArrayList<>((int) (Math.log(regulations.directPlayOffClubs()) / Math.log(2)));
-		teams.forEach(t -> leagueTable.add(new TournamentTableNote(t)));
+		teams.forEach(t -> leaguePhaseTable.add(new TournamentTableNote(t)));
 	}
 
 	@Override
 	public void resetResults() {
-		leagueTable.clear();
+		leaguePhaseTable.clear();
 		leaguePhaseOpponents.clear();
 		indirectPlayOffPairs.clear();
 		playOffPairs.clear();
@@ -51,27 +58,22 @@ public class SwissSystemCup implements ISwissSystemCup {
 		if (!leaguePhaseOpponents.isEmpty()) {
 			throw new IllegalStateException("tournament has been already started (cup - '" + name + "', replaceTeam)");
 		}
-		int index = leagueTable.indexOf(oldTeam);
-		leagueTable.set(index, new TournamentTableNote(newTeam));
-		leagueTable.sort(Comparator.comparing(TournamentTableNote::team));
+		int index = leaguePhaseTable.indexOf(oldTeam);
+		leaguePhaseTable.set(index, new TournamentTableNote(newTeam));
+		leaguePhaseTable.sort(Comparator.comparing(TournamentTableNote::getTeamName));
 	}
 
 	@Override
-	public List<String> teams() {
-		List<String> res = new ArrayList<>(regulations.amountOfTeams());
-		leagueTable.forEach(note -> res.add(note.team()));
+	public List<String> getTeams() {
+		List<String> res = new ArrayList<>(regulations.getAmountOfTeams());
+		leaguePhaseTable.forEach(note -> res.add(note.getTeamName()));
 		return res;
-	}
-
-	@Override
-	public IRegulations regulations() {
-		return regulations;
 	}
 
 	@Override
 	public List<MatchNote> nextStageMatches() {
 		if (currentTour < regulations.leaguePhaseMatches()) {
-			List<MatchNote> res = new ArrayList<>(regulations.amountOfTeams() / 2);
+			List<MatchNote> res = new ArrayList<>(regulations.getAmountOfTeams() / 2);
 			leaguePhaseOpponents.forEach((_, value) -> res.add(value.get(currentTour)));
 			return res;
 		}
@@ -112,43 +114,18 @@ public class SwissSystemCup implements ISwissSystemCup {
 	}
 
 	@Override
-	public String getName() {
-		return name;
-	}
-
-	@Override
-	public List<TournamentTableNote> leaguePhaseTable() {
-		return leagueTable;
-	}
-
-	@Override
 	public void setTeams(List<String> teams) {
-		if (teams.size() != regulations.amountOfTeams()) {
+		if (teams.size() != regulations.getAmountOfTeams()) {
 			throw new InvalidParameterException("invalid number of teams (cup - '" + name + "', setTeams)");
 		}
-		var newTable = new ArrayList<TournamentTableNote>(regulations.amountOfTeams());
+		var newTable = new ArrayList<TournamentTableNote>(regulations.getAmountOfTeams());
 		teams.forEach(t -> newTable.add(new TournamentTableNote(t)));
-		leagueTable = newTable;
-	}
-
-	@Override
-	public void setLeaguePhaseOpponents(Map<String, List<MatchNote>> opponents) {
-		leaguePhaseOpponents = opponents;
-	}
-
-	@Override
-	public void setIndirectPlayOffPairs(List<Pair<MatchNote>> pairs) {
-		indirectPlayOffPairs = pairs;
+		leaguePhaseTable = newTable;
 	}
 
 	@Override
 	public void setNextStagePairs(List<Pair<MatchNote>> pairs) {
 		playOffPairs.add(pairs);
-	}
-
-	@Override
-	public short currentTour() {
-		return currentTour;
 	}
 
 	@Override
@@ -167,11 +144,6 @@ public class SwissSystemCup implements ISwissSystemCup {
 	}
 
 	@Override
-	public List<Pair<MatchNote>> indirectPlayOffPairs() {
-		return indirectPlayOffPairs;
-	}
-
-	@Override
 	public List<Pair<MatchNote>> currentStagePairs() {
 		return playOffPairs.get(currentTour - regulations.leaguePhaseMatches() - 2);
 	}
@@ -179,7 +151,7 @@ public class SwissSystemCup implements ISwissSystemCup {
 	@Override
 	public List<MatchNote> currentStageMatches() {
 		if (currentTour < regulations.leaguePhaseMatches()) {
-			List<MatchNote> res = new ArrayList<>(regulations.amountOfTeams() / 2);
+			List<MatchNote> res = new ArrayList<>(regulations.getAmountOfTeams() / 2);
 			leaguePhaseOpponents.forEach((_, value) ->
 				res.add(value.get(currentTour)));
 			return res;

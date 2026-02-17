@@ -1,7 +1,7 @@
 package model.tournament.impl;
 
+import lombok.Getter;
 import model.tournament.regulations.impl.DefaultCupRegulations;
-import model.tournament.regulations.IRegulations;
 import model.tournament.ICup;
 import shared.IsPowerOfTwo;
 
@@ -10,24 +10,28 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DefaultCup implements ICup {
+	@Getter
 	private final String name;
+	@Getter
 	private DefaultCupRegulations regulations;
+	@Getter
 	private short currentStage;
+	@Getter
 	private List<String> teams;
 	private List<List<MatchNote>> pairsAfterDraw;
 
 
 	public DefaultCup(String name, DefaultCupRegulations regulations, List<String> teams) throws InvalidParameterException {
-		if (!IsPowerOfTwo.check(regulations.amountOfTeams())) {
+		if (!IsPowerOfTwo.check(regulations.getAmountOfTeams())) {
 			throw new InvalidParameterException("amount of teams in cup must be power of 2 (cup '" + name + "')");
 		}
-		if (regulations.amountOfTeams() != teams.size()) {
+		if (regulations.getAmountOfTeams() != teams.size()) {
 			throw new InvalidParameterException("number of teams in regulations and in reality are different (cup '" + name + "')");
 		}
 		this.name = name;
 		this.regulations = regulations;
 		this.teams = teams;
-		pairsAfterDraw = new ArrayList<>((int) (Math.log(regulations.amountOfTeams()) / Math.log(2)));
+		pairsAfterDraw = new ArrayList<>((int) (Math.log(regulations.getAmountOfTeams()) / Math.log(2)));
 	}
 
 	@Override
@@ -46,16 +50,6 @@ public class DefaultCup implements ICup {
 	}
 
 	@Override
-	public List<String> teams() {
-		return teams;
-	}
-
-	@Override
-	public IRegulations regulations() {
-		return regulations;
-	}
-
-	@Override
 	public List<MatchNote> nextStageMatches() {
 		return pairsAfterDraw.get(currentStage);
 	}
@@ -71,16 +65,6 @@ public class DefaultCup implements ICup {
 	}
 
 	@Override
-	public String getName() {
-		return name;
-	}
-
-	@Override
-	public short currentStage() {
-		return currentStage;
-	}
-
-	@Override
 	public void increaseStage() {
 		++currentStage;
 	}
@@ -92,7 +76,7 @@ public class DefaultCup implements ICup {
 
 	@Override
 	public void setTeams(List<String> teams) {
-		if (teams.size() != regulations.amountOfTeams()) {
+		if (teams.size() != regulations.getAmountOfTeams()) {
 			throw new InvalidParameterException("invalid number of teams (cup - '" + name + "', setTeams)");
 		}
 		this.teams = teams;
